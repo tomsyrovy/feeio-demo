@@ -1,0 +1,230 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Moje zakázky" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-timesheet-list {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<!-- ========== Page Header ========== -->
+	<div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Moje zakázky</h1>
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+	<div class="row">
+		<div class="col-lg-12 text-right">
+            {{ render(controller('AppBundle:TimeWindow:index')) }}
+		</div>
+	</div>
+	<br>
+
+	<div class="row">
+		<div class="col-lg-12">
+
+			<div class="panel panel-default">
+
+				<div class="table-responsive">
+					<table id="table-contacts" class="table table-hover user-table table-datatable" style="font-size: 11px;">
+
+						<thead>
+						<tr>
+							<th class="no-orderable">
+
+							</th>
+							<th class="filterable">
+								Klient
+							</th>
+							<th class="filterable">
+								Kampaň
+							</th>
+							<th class="filterable">
+								Zakázka
+							</th>
+							<th class="filterable">
+								Stav
+							</th>
+							<th class="filterable">
+								Zúčtovatelná
+							</th>
+							<th class="filterable">
+								Zahájení
+							</th>
+							<th class="filterable">
+								Ukončení
+							</th>
+							<th class="filterable">
+								Pracovní skupina
+							</th>
+
+							<th class="filterable">
+								Společnost
+							</th>
+
+							<th class="sum">
+								Fakturace <sub>plán</sub>
+							</th>
+
+							<th class="sum">
+								Fakturace <sub>reál</sub>
+							</th>
+
+							<th class="sum">
+								Net Income
+							</th>
+
+							<th>
+								Hodinová sazba
+							</th>
+
+							<th>
+								Overservice
+							</th>
+
+							<th class="text-right no-orderable">
+								<!-- Akce -->
+							</th>
+						</tr>
+						</thead>
+
+						<tbody>
+
+                        {% for commission in commissions %}
+
+							<tr class="contact-row">
+								<td></td>
+								<td>
+                                    {% if commission.campaign.client.closed %}
+										<i style='color: red;' class="fa fa-fw fa-times-circle"></i>
+                                    {% else %}
+										<i style='color: green;' class="fa fa-fw fa-check-circle"></i>
+                                    {% endif %}
+                                    {{ commission.campaign.client.code }}
+								</td>
+								<td>
+                                    {% if commission.campaign.closed %}
+										<i style='color: red;' class="fa fa-fw fa-times-circle"></i>
+                                    {% else %}
+										<i style='color: green;' class="fa fa-fw fa-check-circle"></i>
+                                    {% endif %}
+                                    {{ commission.campaign.nameOwn }}
+								</td>
+								<td>
+                                    {% if commission.closed %}
+										<i style='color: red;' class="fa fa-fw fa-times-circle"></i>
+                                    {% else %}
+										<i style='color: green;' class="fa fa-fw fa-check-circle"></i>
+                                    {% endif %}
+                                    {{ commission.nameOwn }}
+								</td>
+								<td>
+                                    {{ commission.status }}
+								</td>
+								<td>
+                                    {% if not commission.billable %}
+										<i style='color: red;' class="fa fa-fw fa-times-circle"></i> Ne
+                                    {% else %}
+										<i style='color: green;' class="fa fa-fw fa-check-circle"></i> Ano
+                                    {% endif %}
+								</td>
+								<td>{{ commission.startDate.code }}</td>
+								<td>{{ commission.endDate.code }}</td>
+								<td>
+                                    {{ commission.campaign.companyGroup.name }}
+								</td>
+								<td>{{ commission.campaign.client.company.name }}</td>
+
+                                {#<td class="text-right">#}
+                                {#{% if commission.sums.buyingPricePlan is defined and commission.sums.buyingPricePlan %}#}
+                                {#{{ commission.sums.buyingPricePlan|number_format(0, ',', ' ') }}#}
+                                {#{% endif %}#}
+                                {#</td>#}
+								<td class="text-right">
+                                    {% if commission.sums.sellingPricePlan is defined and commission.sums.sellingPricePlan %}
+                                        {{ commission.sums.sellingPricePlan|number_format(0, ',', ' ') }}
+                                    {% endif %}
+								</td>
+                                {#<td class="text-right">#}
+                                {#{% if commission.sums.buyingPriceReal is defined and commission.sums.buyingPriceReal %}#}
+                                {#{{ commission.sums.buyingPriceReal|number_format(0, ',', ' ') }}#}
+                                {#{% endif %}#}
+                                {#</td>#}
+								<td class="text-right">
+                                    {% if commission.sums.invoicePrice is defined and commission.sums.invoicePrice %}
+                                        {{ commission.sums.invoicePrice|number_format(0, ',', ' ') }}
+                                    {% endif %}
+								</td>
+								<td class="text-right">
+                                    {{ commission.netIncome|number_format(0, ',', ' ') }}
+								</td>
+								<td class="text-right">
+                                    {{ commission.hourlyRate }}
+								</td>
+								<td class="text-right">
+                                    {{ commission.hourPlanVsReal }} %
+								</td>
+                                {#<td class="text-right">#}
+                                {#{% if commission.sums.profitReal is defined and commission.sums.profitReal and commission.sums.invoicePrice is defined and commission.sums.invoicePrice  %}#}
+                                {#{{ commission.sums.profitReal|number_format(0, ',', ' ') }}#}
+                                {#{% endif %}#}
+                                {#</td>#}
+
+								<td class="contact-action text-right">
+
+									<a title="Detail" class="btn btn-xs btn-default" href="{{ path('app_commission_detail', {'commission_id': commission.id}) }}">
+										<i class="fa fa-fw fa-search"></i>
+									</a>
+
+									{#<a title="Alokace lidí" class="btn btn-xs btn-default" href="{{ path('app_allocation_list', {'commission_id': commission.id}) }}">#}
+										{#<i class="fa fa-fw fa-users"></i>#}
+									{#</a>#}
+
+									<a title="Export timesheetů" class="btn btn-xs btn-default" href="{{ path('app_export_timesheetsofcommission', {'commission_id': commission.id}) }}">
+										<i class="fa fa-fw fa-file-excel-o"></i>
+									</a>
+
+								</td>
+							</tr>
+
+                        {% endfor %}
+						</tbody>
+
+						<tfoot>
+						<tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+							<th class="text-right"></th>
+
+							<th class="text-right">
+								<!-- Akce -->
+							</th>
+						</tr>
+						</tfoot>
+
+					</table>
+				</div> <!-- .table-responsive -->
+
+			</div> <!-- .panel panel-default -->
+
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+
+
+{% endblock %}

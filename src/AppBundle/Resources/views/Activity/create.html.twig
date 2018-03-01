@@ -1,0 +1,26 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = "Vytvoření aktivity ve společnosti " ~ company.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-activity-create {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <a class="btn btn-info" title="Zpět" href="{{ path('app_activity_list', {'company_id': company.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+
+            <div class="page-header text-center">
+                <h2><i class="fa fa-fw fa-briefcase"></i> {{ title }}</h2>
+            </div>
+        </div> <!-- .col-lg-12 -->
+
+
+        {% include "@App/Activity/inc/activityForm.html.twig" with {"form" : form, "submitLabel" : "Vytvořit"} %}
+
+
+    </div> <!-- .row -->
+
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Profil" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-profile {{ parent() }}{% endblock %}
+
+{% block content %}
+
+    <img src="{{ asset(user.image.getWebPath()) }}" alt="{{ user.fullName }}">
+
+    <p>Firstname: {{ user.firstname }}</p>
+    <p>Lastname: {{ user.lastname }}</p>
+
+    <a href="{{ path('app_profile_edit') }}" title="Upravit profil">Upravit profil</a>
+
+{% endblock %}

@@ -1,0 +1,286 @@
+/**
+ * Bootstrap overrides and addons
+ */
+
+
+/** Navbar */
+.navbar {
+	border: 0;
+}
+
+.navbar-default {
+	.navbar-nav {
+		> li {
+			> a {
+				.transition(.1s);
+			}
+		}
+	}
+}
+
+
+
+
+
+/** Forms */
+label {
+	font-weight: normal;
+}
+
+.form-control {
+	box-shadow: none;
+	border-width: 2px;
+	padding: 10px 15px;
+	height: 43px;
+
+	&:focus {
+		border-color: @purple-lighter;
+		outline: 0;
+		box-shadow: none;
+	}
+
+	&::-webkit-input-placeholder,
+	&:-moz-placeholder,
+	&::-moz-placeholder,
+	&:-ms-input-placeholder {
+
+	}
+}
+
+
+
+
+
+/** State texts */
+.text-info {
+	a {
+		text-decoration: underline;
+	}
+}
+
+
+
+
+/** Typography */
+.page-header {
+	margin-top: 30px;
+}
+
+
+
+
+/** Buttons */
+.btn {
+	border: 0;
+	.transition(.2s);
+
+	&:hover {
+		.transform(1.05);
+	}
+}
+
+.btn-back {
+	margin-top: 50px;
+}
+
+.btn-header {
+	margin-top: 20px;
+}
+
+.btn-sub-header {
+	margin-bottom: 20px;
+}
+
+.btn-orange {
+	background: @orange;
+	color: #fff;
+}
+
+
+
+
+
+/** Panels */
+.panel {
+	box-shadow: none;
+	border-width: 2px;
+	// border-radius: 6px;
+}
+
+.panel-default {
+	> .panel-heading {
+		border: 0;
+	}
+}
+
+.panel-nav-tabs {
+	border-radius: 0 0 6px 6px;
+}
+
+
+
+
+
+/** Tables */
+.table {
+	> tbody {
+		> tr {
+			.transition(.1s);
+
+			> td {
+				vertical-align: middle;
+			}
+
+			.vertical-middle {
+				vertical-align: middle;
+			}
+		}
+	}
+
+	.btn {
+		.transition(0);
+	}
+}
+
+.table-buttons {
+	margin: 10px 15px 0;
+}
+
+
+
+
+
+/** Modal */
+//@modal-content-bg: #fff;
+//@modal-content-border-color: #fff;
+//@modal-backdrop-bg: @purple;
+//@modal-backdrop-opacity: 1;
+//@modal-header-border-color: #e5e5e5;
+@modal-header-border-color: @grey-light;
+@modal-footer-border-color: @grey-light;
+
+.modal-content {
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	border: 0;
+}
+
+
+
+
+/** Dropdown menu */
+.dropdown-menu {
+	border: 0;
+	border-radius: 6px;
+
+	.divider {
+		background-color: @purple-light;
+	}
+
+	li {
+		a {
+			&:hover {
+				background: @grey-light;
+			}
+		}
+	}
+}
+
+@media only screen and (min-width: @screen-sm) {
+	.dropdown-menu {
+		.divider {
+			background-color: @grey-light;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+/** Popover */
+.popover {
+	border: 0;
+	padding: 0;
+
+	&.right {
+		> .arrow {
+			border-right-color: transparent;
+		}
+	}
+}
+
+
+
+
+
+/** Nav tabs */
+.nav-tabs {
+	border-width: 2px;
+
+	> li > a,
+	> li.active > a,
+	> li.active > a:hover,
+	> li.active > a:focus {
+		border-width: 2px;
+	}
+
+	&.nav-justified {
+		li {
+			a,
+			a:hover {
+				border: 0;
+			}
+		}
+
+		> .active {
+			> a,
+			a:hover {
+				border: 0;
+			}
+		}
+	}
+
+	&.nav-tabs-light {
+		a {
+			color: @gray-light;
+		}
+	}
+}
+
+
+
+
+
+/** Alerts */
+.alert-dismiss {
+	position: absolute;
+	top: 60px;
+	width: 100%;
+	border-radius: 0;
+	z-index: 100;
+}
+
+.alert-helper {
+	margin-top: 50px;
+}
+
+.alert-js {
+	position: fixed;
+	display: none;
+}
+
+
+
+
+
+/** Accordion */
+.accordion-heading {
+	cursor: pointer;
+
+	&:hover {
+
+	}
+}

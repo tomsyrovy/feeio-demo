@@ -1,0 +1,177 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Kontakty" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-contact-list {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2><i class="fa fa-fw fa-briefcase"></i> Kontakty</h2>
+            </div> <!-- .col-lg-6 -->
+
+            {% if canCreateContactBtn %}
+
+                <div class="col-lg-6 text-right">
+                    <a class="btn btn-header btn-warning" title="Vytvořit nový kontakt" href="{{ path('app_contact_create') }}">
+                        <i class="fa fa-fw fa-plus"></i> Nový kontakt
+                    </a>
+                </div> <!-- .col-lg-6 -->
+
+            {% endif %}
+
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+
+
+
+    {% if contacts|length == 0 %}
+
+        <div class="alert alert-warning" role="alert">
+            Není zde žádný kontakt.
+        </div> <!-- .alert -->
+
+    {% else %}
+
+
+
+
+
+    <!-- ========== Sorting ========== -->
+    <div class="row">
+        <div class="col-lg-6 temporaly-hidden">
+            <p>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-sort"></i> Řadit podle názvu</a>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-sort"></i> Řadit podle společnosti</a>
+            </p>
+        </div> <!-- .col-lg-6 -->
+        <div class="col-lg-12 text-right">
+            <p>
+                <a class="btn btn-sm btn-default" href="#" data-type="toggle" data-table="table-contacts" data-col="type" data-value="supplier, both"><i class="fa fa-fw fa-lg fa-toggle-on"></i> Dodavatelé</a>
+                <a class="btn btn-sm btn-default" href="#" data-type="toggle" data-table="table-contacts" data-col="type" data-value="subscriber, both"><i class="fa fa-fw fa-lg fa-toggle-on"></i> Odběratelé</a>
+            </p>
+        </div> <!-- .col-lg-6 -->
+    </div> <!-- .row -->
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="panel panel-default">
+
+                <div class="table-responsive">
+                    <table id="table-contacts" class="table table-hover user-table table-datatable">
+                        <thead>
+                            <tr>
+                                {#<th>#}
+                                    {#<a title="" href="#"><i class="fa fa-sort-alpha-asc"></i></a>#}
+                                {#</th>#}
+                                <th class="no-orderable"></th>
+                                <th>
+                                    Název
+                                </th>
+                                <th>
+                                    Typ
+                                </th>
+                                <th>
+                                    IČ
+                                </th>
+                                <th>
+                                    E-mail
+                                </th>
+                                <th>
+                                    Společnost
+                                </th>
+                                <!-- <th>
+                                    a
+                                </th> -->
+                                <th class="text-right no-orderable">
+                                    <!-- Akce -->
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {#{% set letter = "" %}#}
+
+                            {% for contact in contacts %}
+
+                            <tr class="contact-row">
+                                {#<td>#}
+                                    {#{% if letter != contact.data.title|slice(0, 1) %}#}
+                                        {#{%  set letter = contact.data.title|slice(0, 1) %}#}
+                                        {#{{ letter }}#}
+                                    {#{% endif %}#}
+                                {#</td>#}
+                                <td></td>
+                                <td>
+                                    {{ contact.data.title }}
+                                </td>
+                                <td data-col="type" data-value="{{ contact.data.type.code }}">
+                                    {{ contact.data.type.title }}
+                                </td>
+                                <td>
+                                    {{ contact.data.vatnumber }}
+                                </td>
+                                <td>
+                                    {{ contact.data.email }}
+                                </td>
+                                <td>
+                                    {{ contact.data.company.name }}
+                                </td>
+                                <td class="contact-action text-right">
+
+                                    <a class="btn btn-sm btn-default" target="_blank" title="Zobrazit kontakt v ARES" href="http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_res.cgi?ico={{ contact.data.vatnumber }}&amp;jazyk=cz&amp;xml=1">
+                                        <small>ARES</small>
+                                    </a>
+
+                                    <a title="Detail kontaktu" class="btn btn-sm btn-default" href="{{ path('app_contact_detail', {'contact_id': contact.data.id}) }}">
+                                        <i class="fa fa-fw fa-search"></i>
+                                    </a>
+
+                                    <a title="Upravit kontakt" class="btn btn-sm btn-default" href="{{ path('app_contact_update', {'contact_id': contact.data.id}) }}">
+                                        <i class="fa fa-fw fa-pencil"></i>
+                                    </a>
+
+                                    <a title="Odstranit kontakt" class="btn btn-sm btn-default" href="{{ path('app_contact_delete', {'contact_id': contact.data.id}) }}">
+                                        <i class="fa fa-fw fa-trash-o"></i>
+                                    </a>
+
+                                    {% endfor %}
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- .table-responsive -->
+
+
+
+            </div> <!-- .panel panel-default -->
+
+
+
+
+            <div class="row">
+                <div class="col-lg-6">
+
+                </div> <!-- .col-lg-6 -->
+
+                <div class="col-lg-6 text-right small">
+                    Celkem kontaktů: <span class="badge">{{ contacts|length }}</span>
+                </div> <!-- .col-lg-6 -->
+            </div> <!-- .row -->
+
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+    {% endif %}
+
+
+{% endblock %}

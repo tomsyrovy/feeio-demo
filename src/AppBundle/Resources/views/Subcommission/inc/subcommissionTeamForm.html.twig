@@ -1,0 +1,95 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+
+<div class="row">
+    <div class="col-lg-4">
+        Jméno
+    </div> <!-- .col-lg-4 -->
+
+    <div class="col-lg-2">
+        Externí sazba
+    </div> <!-- .col-lg-2 -->
+
+    <div class="col-lg-2">
+        Interní sazba
+    </div> <!-- .col-lg-2 -->
+
+    <div class="col-lg-2 text-right">
+        Hodiny
+    </div> <!-- .col-lg-2 -->
+</div> <!-- .row -->
+
+{% macro widget_prototype(widget) %}
+
+    {% if widget.vars.prototype is defined %}
+        {% set form = widget.vars.prototype %}
+        {% set userCompany = widget.vars.prototype.userCompany %}
+        {% set rateInternal = widget.vars.prototype.rateInternal %}
+        {% set rateExternal = widget.vars.prototype.rateExternal %}
+        {% set hours = widget.vars.prototype.hours %}
+        {% set name = widget.vars.prototype.vars.name %}
+    {% else %}
+        {% set form = widget %}
+        {% set userCompany = widget.userCompany %}
+        {% set rateInternal = widget.rateInternal %}
+        {% set rateExternal = widget.rateExternal %}
+        {% set hours = widget.hours %}
+        {% set name = widget.vars.full_name %}
+    {% endif %}
+
+    <div data-content="{{ name }}">
+
+
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    {{ form_widget(userCompany) }}
+                </div> <!-- .form-group -->
+            </div>
+            <div class="col-lg-2">
+                {{ form_widget(rateExternal) }}
+            </div>
+            <div class="col-lg-2">
+                {{ form_widget(rateInternal) }}
+            </div>
+            <div class="col-lg-2">
+
+                <div class="input-group">
+                    {{ form_widget(hours) }}
+                    <div class="input-group-addon">h.</div>
+                </div>
+
+            </div>
+            <div class="col-lg-2 text-right">
+                <a href="#" class="btn btn-danger btn-remove" data-related="{{ name }}"><i class="fa fa-trash"></i></a>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+{{ form_start(form, {'attr' : {'id' : 'teamForm'}}) }}
+
+<div id="relations" data-prototype="{{ _self.widget_prototype(form.members)|escape }}">
+    {% for relation in form.members %}
+
+        {{ _self.widget_prototype(relation) }}
+
+    {% endfor %}
+</div>
+
+<br>
+<a href="#" class="btn btn-default btn-sm btn-add" data-target="relations"><i class="fa fa-plus"></i></a>
+
+<div class="text-center">
+    <input class="btn btn-primary" type="submit" value="{{ submitLabel }}">
+</div>
+
+
+
+{{ form_widget(form._token) }}
+
+{{ form_end(form, {'render_rest': false}) }}

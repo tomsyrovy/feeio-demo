@@ -1,0 +1,14 @@
+{% extends "@App/email/base.html.twig" %}
+
+
+{% block email_content %}
+	<h1 style="font-size: 20px; line-height: 100%; color: #18bc9c; margin: 0 0 20px 0;">Dobrý den, {{ user.getVokativ() }},</h1>
+
+	<p style="margin: 20px 0 20px 0">zdá se, že jste zapomněl/a své heslo do Feeia.</p>
+
+	<p style="margin: 20px 0 20px 0">Nic se neděje, nové heslo si můžete vytvořit na <a style="color: #18bc9c;" title="Zobrazit" href="{{ confirmationUrl }}">této stránce</a>.</p>
+
+	<p style="margin: 20px 0 20px 0">Pokud jste o nové heslo nežádal/a, můžete tuto zprávu v klidu ignorovat.</p>
+
+	<p style="margin: 20px 0 20px 0"><strong>Vaše Feeio</strong></p>
+{% endblock %}

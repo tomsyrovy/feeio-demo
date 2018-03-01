@@ -1,0 +1,51 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = "Reporty" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-report-list{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Page header ========== -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2><i class="fa fa-fw fa-bar-chart"></i> {{ title }}</h2>
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+    {% include "@App/CommissionReport/inc/timeRange.html.twig" %}
+
+    <div class="row">
+
+        {% for reportConfigurationDO in reportConfigurationDOs %}
+
+            <div class="col-lg-4 col-report">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4 class="report-heading">{{ reportConfigurationDO.reportConfiguration.name }}</h4>
+
+                        <p class="text-info">
+                            {{ reportConfigurationDO.reportConfiguration.description|raw }}
+                        </p>
+
+                        {% form_theme reportConfigurationDO.form 'bootstrap_3_layout.html.twig' %}
+
+                        {{ form_start(reportConfigurationDO.form) }}
+                        {{ form_widget(reportConfigurationDO.form) }}
+                        <div class="text-right">
+                            <input type="submit" class="btn btn-default" value="Sestavit report">
+                        </div>
+                        {{ form_end(reportConfigurationDO.form) }}
+
+                    </div> <!-- .panel-body -->
+                </div> <!-- .panel panel-default -->
+            </div> <!-- .col-lg-4 -->
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

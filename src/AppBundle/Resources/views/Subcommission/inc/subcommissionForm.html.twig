@@ -1,0 +1,48 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+{{ form_start(form, {'attr' : {'id' : 'subcommissionForm'}}) }}
+
+
+{{ form_row(form.subcommission.yearmonth, {'label' : 'Měsíc'}) }}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        {{ form_row(form.feeFixPlan, {'label' : 'Plánované fixní fee'}) }}
+    </div> <!-- .col-lg-6 -->
+
+    <div class="col-lg-6">
+        {{ form_row(form.feeFixReal, {'label' : 'Reálné fixní fee'}) }}
+    </div> <!-- .col-lg-6 -->
+</div> <!-- .row -->
+
+
+<div class="row">
+    <div class="col-lg-6">
+        {{ form_row(form.feeSuccessPlan, {'label' : 'Plánované success fee'}) }}
+    </div> <!-- .col-lg-6 -->
+
+    <div class="col-lg-6">
+        {{ form_row(form.feeSuccessReal, {'label' : 'Reálné success fee'}) }}
+    </div> <!-- .col-lg-6 -->
+</div> <!-- .row -->
+
+
+<div class="row">
+    <div class="col-lg-6">
+        {{ form_row(form.hoursPlan, {'label' : 'Plánované hodiny'}) }}
+    </div> <!-- .col-lg-6 -->
+
+</div> <!-- .row -->
+
+
+<div class="text-center">
+    <input class="btn btn-primary" type="submit" value="{{ submitLabel }}">
+</div>
+
+{{ form_widget(form._token) }}
+
+{{ form_end(form, {'render_rest': false}) }}
+
+

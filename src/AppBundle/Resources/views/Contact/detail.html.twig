@@ -1,0 +1,122 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Kontakt " ~ contact.data.title %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-contact-detail {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-back btn-sm btn-default" title="Zpět" href="{{ path('app_contact_list') }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2><i class="fa fa-fw fa-briefcase"></i> {{ contact.data.title }}</h2>
+                <span class="label label-primary"><i class="fa fa-fw fa-briefcase"></i> {{ contact.data.type.title }}</span>
+                <span class="label label-default"><i class="fa fa-fw fa-building"></i> {{ contact.data.company.name }}</span>
+            </div> <!-- .col-lg-6 -->
+
+            <div class="col-lg-6 text-right">
+                <a class="btn btn-header btn-default" title="Upravit" href="{{ path('app_contact_update', {'contact_id': contact.data.id}) }}"><i class="fa fa-fw fa-pencil"></i> Upravit</a>
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+
+
+    <div class="row">
+		<div class="col-lg-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation" class="active">
+                    <a href="#contact-info" aria-controls="contact-info" role="tab" data-toggle="tab">
+                        Základní údaje
+                    </a>
+                </li>
+				<!-- <li role="presentation">
+                    <a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">
+                        Zakázky
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#" aria-controls="" role="tab" data-toggle="tab">
+                        Náklady
+                    </a>
+                </li>
+				<li role="presentation">
+                    <a href="#statistic" aria-controls="statistic" role="tab" data-toggle="tab">
+                        Statistika
+                    </a>
+                </li> -->
+			</ul>
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+
+
+
+    <div class="panel panel-default panel-nav-tabs">
+        <div class="panel-body">
+
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="contact-info">
+                    <div class="row">
+                        <div class="col-lg-3 text-center">
+                            <i class="fa fa-fw fa-briefcase fa-4x fa-contact-logo"></i>
+                        </div> <!-- .col-lg-3 -->
+
+                        <div class="col-lg-3">
+                            <h2><small>{{ contact.data.title }}</small></h2>
+
+                            IČ: {{ contact.data.vatnumber }}
+                            <br>
+                            DIČ: {{ contact.data.taxnumber }}
+                        </div> <!-- .col-lg-3 -->
+
+
+                        <div class="col-lg-3">
+                            <h2><small>Adresa</small></h2>
+
+                            {{ contact.data.street }}
+                            {{ contact.data.number }}<br>
+                            {{ contact.data.city }}
+                            {{ contact.data.zipcode }}<br>
+                            {{ contact.data.country.name }}
+                        </div> <!-- .col-lg-3 -->
+
+                        <div class="col-lg-3">
+                            <h2><small>Kontaktní informace</small></h2>
+                            {{ contact.data.website }}<br>
+                            {{ contact.data.email }}<br>
+                            {{ contact.data.telephone }}<br>
+                            {{ contact.data.bankaccountnumber }}<br>
+                            {{ contact.data.iban }}<br>
+                        </div> <!-- .col-lg-3 -->
+
+
+                    </div> <!-- .row -->
+                </div> <!-- .tab-pane -->
+
+                <!-- <div role="tabpanel" class="tab-pane" id="accounts">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="statistic">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </div> -->
+            </div> <!-- .tab-content -->
+
+
+
+
+        </div> <!-- .panel-body -->
+    </div> <!-- .panel -->
+
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = "Report" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-report{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <div id="pgrid"></div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        // pivot grid options
+        var config = {
+            dataSource: {{ data|raw }},
+            dataHeadersLocation: 'columns',
+            theme: 'blue',
+            toolbar: {
+                visible: true
+            },
+            grandTotal: {
+                rowsvisible: true,
+                columnsvisible: true
+            },
+            subTotal: {
+                visible: true,
+                collapsed: true
+            },
+            fields: [
+                { name: 'co_name', caption: 'Společnost' },
+                { name: 'cl_name', caption: 'Klient' },
+                { name: 'ca_name', caption: 'Kampaň' },
+                { name: 'c_name', caption: 'Zakázka' },
+                { name: 'ac_name', caption: 'Alokace' },
+                { name: 'acl_name', caption: 'Seznam' },
+                { name: 'acli_id', caption: 'Položka' },
+
+
+//                { name: 'u_fullname', caption: 'Člověk' },
+                { name: 'ym_year', caption: 'Rok' },
+                { name: 'ym_month', caption: 'Měsíc' },
+//                { name: 'acli_quantityPlan', caption: 'Množství (plán)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_buyingPricePlan', caption: 'Nákupní cena (plán)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_sellingPricePlan', caption: 'Prodejní cena (plán)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_profitPlan', caption: 'Zisk (plán)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_totalBuyingPricePlan', caption: 'Celková nákupní cena (plán)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_totalSellingPricePlan', caption: 'Celková prodejní cena (plán)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+                { name: 'acli_totalProfitPlan', caption: 'Celkový zisk (plán)', dataSettings:
+                    {
+                        aggregateFunc: 'sum',
+                        formatFunc: function(value) {
+                            return Number(value).toFixed(0);
+                        }
+                    }
+                },
+//                { name: 'acli_quantityReal', caption: 'Množství (reál)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_buyingPriceReal', caption: 'Nákupní cena (reál)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_sellingPriceReal', caption: 'Prodejní cena (reál)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_profitReal', caption: 'Zisk (reál)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_totalBuyingPriceReal', caption: 'Celková nákupní cena (reál)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+//                { name: 'acli_totalSellingPriceReal', caption: 'Celková prodejní cena (reál)', dataSettings:
+//                    {
+//                        aggregateFunc: 'sum',
+//                        formatFunc: function(value) {
+//                            return Number(value).toFixed(0);
+//                        }
+//                    }
+//                },
+                { name: 'acli_totalProfitReal', caption: 'Celkový zisk (reál)', dataSettings:
+                    {
+                        aggregateFunc: 'sum',
+                        formatFunc: function(value) {
+                            return Number(value).toFixed(0);
+                        }
+                    }
+                },
+            ],
+//            rows    : [ 'Člověk' ],
+//            columns : [ 'Job' ],
+//            data    : [ 'Prodejní cena (plán)' ]
+        };
+
+        // instantiate and show the pivot grid
+        new orb.pgridwidget(config).render(document.getElementById('pgrid'));
+
+    </script>
+
+{% endblock %}

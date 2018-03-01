@@ -1,0 +1,92 @@
+/**
+ * Commision List
+ */
+
+
+.page-commission-list {
+    .nav-tabs {
+        margin-bottom: 30px;
+    }
+
+    .commission-sort {
+        margin-bottom: 20px;
+    }
+
+    .panel-commission {
+		position: relative;
+
+		&:hover {
+			.edit-commission,
+            .add-to-commission {
+				display: inline-block;
+			}
+		}
+	}
+
+	.commission-image {
+		.transition(.2s);
+
+		&:hover {
+			.transform(1.2);
+		}
+	}
+
+	tr {
+		&:hover {
+			.commission-image {
+				.transform(1.2);
+			}
+		}
+	}
+
+	.commission-image-col {
+		width: 85px;
+	}
+
+    .edit-commission {
+		// display: none;
+		// position: absolute;
+		// right: 15px;
+		// top: 15px;
+	}
+
+    .add-to-commission {
+		// display: none;
+		// position: absolute;
+		// right: 15px;
+		// top: 55px;
+	}
+
+
+    .commission-header {
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	.commission-users {
+        margin-top: 20px;
+
+		.user-image {
+			margin: 0 2px 5px 0;
+		}
+	}
+
+    .commission-row {
+		&:hover {
+			a {
+				visibility: visible;
+			}
+		}
+	}
+
+	.commission-action {
+		a {
+			visibility: hidden;
+		}
+	}
+
+    .table-responsive {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+    }
+}

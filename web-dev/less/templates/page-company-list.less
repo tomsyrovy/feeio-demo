@@ -1,0 +1,45 @@
+/**
+ * Company list
+ */
+
+
+.page-company-list {
+	.panel-company {
+		position: relative;
+
+		&:hover {
+			.edit-company {
+				display: inline-block;
+			}
+		}
+	}
+
+	.edit-company {
+		display: none;
+		position: absolute;
+		right: 15px;
+		top: 15px;
+		.transition(.15s);
+
+		&:hover {
+			text-decoration: none;
+			.transform(1.3);
+		}
+	}
+
+	.company-header {
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	.company-users {
+		.user-image {
+			margin: 0 2px 5px 0;
+			.transition(.2s);
+
+			&:hover {
+				.transform(1.2);
+			}
+		}
+	}
+}

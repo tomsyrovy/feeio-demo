@@ -1,0 +1,16 @@
+{% if type is not defined %}
+	{% set type = false %}
+{% endif %}
+<div class="row">
+	<div class="col-lg-12">
+		<ul class="nav nav-tabs">
+			<li{% if get_controller_name() == "commission" and get_action_name() == 'detail' %} class="active"{% endif %}><a href="{{ path('app_commission_detail', {'commission_id': commission.data.id}) }}">Přehled</a></li>
+			<li{% if get_controller_name() == "allocation" and type == 'budget' %} class="active"{% endif %}><a href="{{ path('app_allocation_list', {'commission_id': commission.data.id, 'type' : 'budget'}) }}">Rozpočty</a></li>
+			<li{% if get_controller_name() == "allocation" and type == 'allocation' %} class="active"{% endif %}><a href="{{ path('app_allocation_list', {'commission_id': commission.data.id, 'type' : 'allocation'}) }}">Alokace zdrojů</a></li>
+			{#<li{% if get_controller_name() == "subcommission" and get_action_name() == 'list' and type == 'allocation' %} class="active"{% endif %}><a href="{{ path('app_subcommission_list', {'commission_id': commission.data.id}) }}">Reporty</a></li>#}
+			{#<li{% if get_controller_name() == "cost" and (get_action_name() == 'list' or get_action_name() == 'listyearmonth') %} class="active"{% endif %}><a href="{{ path('app_cost_list', {'commission_id': commission.id}) }}">Náklady</a></li>#}
+			{#<li{% if get_controller_name() == "commission" and (get_action_name() == 'timesheetlist' or get_action_name() == 'timesheetlistyearmonth')  %} class="active"{% endif %}><a href="{{ path('app_commission_timesheetlist', {'commission_id': commission.data.id}) }}">Timesheety</a></li>#}
+			{#<li{% if get_controller_name() == "commissionreport" and (get_action_name() == 'index')  %} class="active"{% endif %}><a href="{{ path('app_commissionreport_index', {'commission_id': commission.id}) }}">Reporty</a></li>#}
+		</ul>
+	</div> <!-- .col-lg-12 -->
+</div> <!-- .row -->

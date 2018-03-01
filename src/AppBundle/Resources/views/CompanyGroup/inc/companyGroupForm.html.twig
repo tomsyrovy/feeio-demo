@@ -1,0 +1,42 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+
+<div class="col-lg-4 col-lg-offset-4">
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            {{ form_start(form) }}
+
+            {{ form_widget(form) }}
+
+            <label>Všichni uživatelé ve společnosti {{ company.name }}</label>
+
+            <div class="people-group company-people-all sortable">
+
+                {% for userCompany in companyPeople %}
+
+                    <img id='userCompany_{{ userCompany.id }}' class="user-image" src="{{ asset(userCompany.user.image.webPath) }}" alt="{{ userCompany.user.fullName }}">
+
+                {% endfor %}
+
+            </div>
+
+            {% for type in types %}
+
+            <label>{{ type.name }}</label>
+
+                <div id="{{ type.code }}" class="people-group people-group-type membership-type-{{ type.code }} sortable"></div>
+
+            {% endfor %}
+
+            <div class="text-center">
+                <input class="btn btn-primary btn-companyGroupSave" data-url="{{ submitUrl }}" value="{{ submitLabel }}">
+            </div>
+
+            {{ form_end(form) }}
+
+        </div> <!-- .panel-body -->
+    </div> <!-- .panel -->
+
+</div> <!-- .col-lg-6 -->

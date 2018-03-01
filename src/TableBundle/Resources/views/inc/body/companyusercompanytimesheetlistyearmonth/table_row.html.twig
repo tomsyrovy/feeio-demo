@@ -1,0 +1,23 @@
+<td class="text-right" data-cell="B{{ loop.index }}">
+    {{ row.timesheet.date|date("j. n. Y") }}
+</td>
+<td class="text-right" data-cell="A{{ loop.index }}">
+    {{ row.timesheet.commission.name }}
+</td>
+<td class="text-right" data-cell="C{{ loop.index }}">
+    {{ row.timesheet.activity.name }}
+</td>
+<td class="text-right" data-cell="C{{ loop.index }}">
+    {{ row.timesheet.description }}
+</td>
+<td class="text-right" data-cell="C{{ loop.index }}">
+    {{ row.timesheet.duration }}
+</td>
+
+{% set index = loop.index %}
+
+{% for column in tableData.userColumns %}
+
+    <td class="text-right" data-formula="{{ column.formula|replaceCalcx(index) }}"></td>
+
+{% endfor %}

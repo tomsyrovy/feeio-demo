@@ -1,0 +1,180 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Klient " ~ client.data.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-contact-detail {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-back btn-sm btn-default" title="Zpět" href="{{ path('app_client_list') }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2>
+                    <i class="fa fa-fw fa-briefcase"></i> <strong>{{ client.data.name }}</strong> <small>klient</small>
+
+                </h2>
+                <span class="label label-primary"><i class="fa fa-fw fa-briefcase"></i> {{ client.data.contact.title }}</span>
+            </div> <!-- .col-lg-6 -->
+
+            <div class="col-lg-6 text-right">
+                {% if client.canUpdate %}
+                    <a class="btn btn-header btn-default" title="Upravit" href="{{ path('app_client_update', {'client_id': client.data.id}) }}"><i class="fa fa-fw fa-pencil"></i> Upravit</a>
+                {% endif %}
+                {% if canCreateCampaign %}
+                    <a class="btn btn-header btn-warning" title="Nová kampaň" href="{{ path('app_campaign_create', {'client_id': client.data.id}) }}">
+                        <i class="fa fa-fw fa-plus"></i> Nová kampaň</a>
+                {% endif %}
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <h6>Smluvní podmínky:</h6>
+                {% for source in client.data.sourceList.sources %}
+                    <div class="label label-info">{{ source.jobPosition.name }} ({{ source.rateExternal }}&nbsp;Kč)</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div> <!-- .page-header -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Kampaně</h3>
+        </div>
+    </div>
+
+    {% if campaigns|length == 0 %}
+
+        <div class="alert alert-warning" role="alert">
+            Není zde žádná kampaň.
+        </div> <!-- .alert -->
+
+    {% else %}
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover user-table table-datatable">
+                            <thead>
+                                <tr>
+
+                                    <th class="text-center filterable no-orderable filterable-default" datatable-filterable-default="otevřený">
+
+                                    </th>
+                                    <th class="filterable">
+                                        Název
+                                    </th>
+                                    <th class="filterable orderable-default">
+                                        Kód
+                                    </th>
+                                    <th class="filterable">
+                                        Rok
+                                    </th>
+                                    <th class="filterable">
+                                        Skupina
+                                    </th>
+
+                                    {% include '@App/include/sumarizations/thead.html.twig' %}
+
+                                    <th class="text-right no-orderable">
+                                        <!-- Akce -->
+                                    </th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for campaign in campaigns %}
+
+                                    <tr class="contact-row">
+                                        <td class="text-center">
+                                            {% if campaign.data.closed %}
+                                                <i class="fa fa-fw fa-times-circle"></i><span class="hidden">uzavřený</span>
+                                            {% else %}
+                                                <i class="fa fa-fw fa-check-circle"></i><span class="hidden">otevřený</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a title="Detail kampaně" href="{{ path('app_campaign_detail', {'campaign_id': campaign.data.id}) }}">
+                                                {{ campaign.data.nameOwn }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a title="Detail kampaně" href="{{ path('app_campaign_detail', {'campaign_id': campaign.data.id}) }}">
+                                                {{ campaign.data.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ campaign.data.year.year }}
+                                        </td>
+                                        <td>
+                                            {% if campaign.data.companyGroup is not null %}
+                                                {{ campaign.data.companyGroup.name }}
+                                            {% endif %}
+                                        </td>
+
+                                        {% include '@App/include/sumarizations/tbody.html.twig' with {'row' : campaign.data} %}
+
+                                        <td class="contact-action text-right">
+
+                                            <a title="Detail kampaně" class="btn btn-sm btn-default" href="{{ path('app_campaign_detail', {'campaign_id': campaign.data.id}) }}">
+                                                <i class="fa fa-fw fa-search"></i>
+                                            </a>
+
+                                            <a title="Odstranit" class="btn btn-sm btn-default" href="{{ path('app_campaign_delete', {'campaign_id': campaign.data.id}) }}">
+                                                <i class="fa fa-fw fa-trash"></i>
+                                            </a>
+
+                                            {#<a title="Upravit kampaň" class="btn btn-sm btn-default" href="{{ path('app_client_update', {'client_id': campaign.data.id}) }}">#}
+                                                {#<i class="fa fa-fw fa-pencil"></i>#}
+                                            {#</a>#}
+
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+
+                                    {% include '@App/include/sumarizations/tfoot.html.twig' %}
+
+                                    <th class="text-right">
+                                        <!-- Akce -->
+                                    </th>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                    </div> <!-- .table-responsive -->
+
+                </div> <!-- .panel panel-default -->
+
+
+            </div> <!-- .col-lg-12 -->
+        </div> <!-- .row -->
+
+    {% endif %}
+
+
+
+
+{% endblock %}

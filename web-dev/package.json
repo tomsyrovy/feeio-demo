@@ -1,0 +1,17 @@
+{
+	"name": "Feeio2",
+	"version": "0.0.2",
+	"dependencies": {
+		"grunt": "latest",
+		"grunt-contrib-concat": "latest",
+		"grunt-contrib-uglify": "latest",
+		"grunt-contrib-less": "latest",
+		"grunt-autoprefixer": "latest",
+		"grunt-bowercopy": "latest",
+		"grunt-notify": "latest",
+		"grunt-contrib-watch": "latest",
+		"grunt-hashres": "latest",
+		"grunt-rsync": "latest",
+		"grunt-contrib-copy": "latest"
+	}
+}

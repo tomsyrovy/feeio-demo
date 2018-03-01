@@ -1,0 +1,176 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = "Zakázky" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-list{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Helper alert ========== -->
+    <div class="alert alert-helper alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <p>
+            Tento přehled zobrazuje veškeré zakázky, kterých jsi <strong>autorem</strong>, <strong>administrátorem</strong> nebo <strong>pozorovatelem</strong>.
+        </p>
+
+        {#<p>#}
+            {#<a title="" href="#">#}
+                {#<small>Vypnout nápovědu</small>#}
+            {#</a>#}
+        {#</p>#}
+    </div> <!-- .alert -->
+
+
+
+
+
+    <!-- ========== Page header ========== -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2><i class="fa fa-fw fa-money"></i> {{ title }}</h2>
+            </div> <!-- .col-lg-6 -->
+
+            {% if canCreate %}
+
+                <div class="col-lg-6 text-right">
+                    <a class="btn btn-header btn-warning" title="Založit novou zakázku" href="{{ path('app_commission_create') }}"><i class="fa fa-fw fa-plus"></i> Přidat zakázku</a>
+
+                    <a class="btn btn-header btn-info" title="Spravovat náklady všech zakázek" href="{{ path('app_cost_listall') }}"><i class="fa fa-fw fa-money"></i> Spravovat náklady</a>
+                </div> <!-- .col-lg-6 -->
+
+            {% endif %}
+
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+
+
+
+
+    {% if commissionUserCompanyRelations|length > 0 %}
+
+
+    <!-- ========== Sorting ========== -->
+    <div class="row temporaly-hidden">
+        <div class="col-lg-6">
+            <p>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-sort"></i> Řadit podle názvu</a>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-sort"></i> Řadit podle odběratele</a>
+            </p>
+        </div> <!-- .col-lg-6 -->
+        <div class="col-lg-6 text-right">
+            <p>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-lg fa-toggle-on"></i> Taktiq</a>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-lg fa-toggle-on"></i> DataConsult</a>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-lg fa-toggle-on"></i> Heretic PR</a>
+                <a class="btn btn-sm btn-default" href="#"><i class="fa fa-fw fa-lg fa-toggle-on"></i> PressOffice</a>
+            </p>
+        </div> <!-- .col-lg-6 -->
+    </div> <!-- .row -->
+
+
+
+
+
+    <!-- ========== Accounts detail ========== -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped commission-table">
+                            <thead>
+                                <tr>
+                                    <th class="commission-image-col">
+
+                                    </th>
+                                    <th>
+                                        Zakázka
+                                    </th>
+                                    <th>
+                                        Odběratel
+                                    </th>
+                                    <th>
+                                        Společnost
+                                    </th>
+                                    <th>
+                                        Skupina
+                                    </th>
+                                    <th>
+                                        Poslední subzakázka
+                                    </th>
+                                    <th class="text-right">
+                                        <!-- Akce -->
+                                    </th>
+                                </tr>
+                            </thead>
+
+                        <tbody>
+                            {% for commissionUserCompanyRelation in commissionUserCompanyRelations %}
+
+                                {% set commission = commissionUserCompanyRelation.commission %}
+
+                                    <tr class="commission-row">
+                                        <td class="text-center">
+                                            <a title="Detail zakázky" href="{{ path('app_subcommission_list', {'commission_id': commission.id}) }}">
+                                                <img class="commission-image" src="{{ asset(commission.image.webPath) }}" alt="{{ commission.name }}">
+                                            </a>
+                                        </td>
+                                        <td>
+											<a href='{{ path('app_subcommission_list', {'commission_id': commission.id}) }}'>
+												{{ commission.name }}
+											</a>
+										</td>
+                                        <td><a href='{{ path('app_contact_detail', {'contact_id': commission.client.id}) }}'>{{ commission.client.title }}</a></td>
+                                        <td><a href='{{ path('app_company_detail', {'company_id': commission.company.id}) }}'>{{ commission.company.name }}</a></td>
+                                        <td>
+                                            {% if commission.companygroup %}
+                                                {{ commission.companygroup.name }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if commission.lastSubcommission %}
+                                                {{ commission.lastSubcommission.code }}
+                                            {% endif %}
+                                        </td>
+
+                                    <td class="commission-action text-right">
+                                        {#<span class="dropdown add-to-commission">#}
+                                            {#<button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">#}
+                                                {#<i class="fa fa-fw fa-plus"></i>#}
+                                            {#<!-- <span class="caret"></span> -->#}
+                                            {#</button>#}
+                                            {#<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">#}
+                                                {#<li><a href="#"><i class="fa fa-fw fa-minus-circle"></i>Přidat náklad</a></li>#}
+                                                {#<li><a href="#"><i class="fa fa-fw fa-plus-circle"></i>Přidat výnos</a></li>#}
+                                            {#</ul>#}
+                                        {#</span>#}
+
+                                        <a class="btn btn-default btn-sm edit-commission text-info" href="{{ path('app_subcommission_list', {'commission_id': commission.id}) }}"><i class="fa fa-fw fa-search"></i></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div> <!-- .table-responsive -->
+
+            </div> <!-- .panel panel-default -->
+
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+    {% else %}
+
+        <div class="alert alert-warning" role="alert">
+            Není zde žádná zakázka ke správě.
+        </div> <!-- .alert -->
+
+    {% endif %}
+
+
+{% endblock %}

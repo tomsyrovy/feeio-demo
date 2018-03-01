@@ -1,0 +1,18 @@
+{% extends "@App/email/base.html.twig" %}
+
+
+{% block email_content %}
+	<h1 style="font-size: 20px; line-height: 100%; color: #18bc9c; margin: 0 0 20px 0;">Dobrý den,</h1>
+
+	<p style="margin: 20px 0 20px 0">byl/a jste pozván/a do aplikace Feeio 2 do společnosti {{ company.name }}.</p>
+
+	<p style="text-align: center; margin: 20px 0 20px 0;"><a class="btn" style="border-radius: 4px; color: #ffffff; background-color: #18bc9c; padding: 10px 20px 10px 20px; text-decoration: none;" title="Feeio" href="http://app.feeio.com/">app.feeio.com</a></p>
+
+	<p style="margin: 20px 0 20px 0">
+	Přihlašovací e-mail: {{ user.email }}
+	<br>
+	Heslo: {{ password }} <em>(nezapomeňte si heslo po přihlášení změnit)</em>
+	</p>
+
+	<p style="margin: 20px 0 20px 0"><strong>Vaše Feeio</strong></p>
+{% endblock %}

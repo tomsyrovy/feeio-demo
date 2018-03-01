@@ -1,0 +1,124 @@
+{% extends '::layout-secured.html.twig' %}
+
+{% set title = commission.data.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail{{ parent() }}{% endblock %}
+
+{% block content %}
+
+<!-- ========== Page header ========== -->
+{% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'přehled'} %}
+
+<style>
+    .table-form {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    .table-form td {
+        padding: 0 1px 0 0;
+        vertical-align: top;
+    }
+    .table-form td input, .table-form td select {
+        width: 100%;
+        height: auto;
+        border: solid 1px #ecf0f1;
+        border-radius: 4px;
+        padding: 3px 4px;
+    }
+    .table-form td select {
+        padding: 1px 4px;
+    }
+    .table-form .top-content td {
+        font-size: inherit;
+        vertical-align: middle;
+    }
+    .table-form .top-content input, .table-form .top-content select {
+        font-size: inherit;
+    }
+    .table-form .middle-label td {
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+    }
+    .table-form .middle-label .type td {
+        font-weight: normal;
+        font-size: 11px;
+    }
+    .table-form .middle-content input, .table-form .low-content input, .table-form .middle-content select, .table-form .low-content select {
+        font-size: 11px;
+    }
+    .table-form .total {
+        border-top: 1px solid #000;
+    }
+    .table-form .total td {
+        font-weight: bold;
+    }
+    .table-form .low-content td {
+        padding-top: 3px;
+        padding-bottom: 40px;
+    }
+    .table-form .sep td {
+        padding-bottom: 3px;
+    }
+    .table-form .grand-total {
+        border-top: 3px solid #000;
+    }
+    .table-form .grand-total td {
+        font-weight: bold;
+        font-size: 16px;
+        padding-top: 3px;
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <table class="table-form">
+            <thead class="middle-label">
+            <tr>
+                <td>Popis</td>
+                <td>Částka</td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+
+                    <td>
+                        <input style="margin-bottom: 1px;" type="text" readonly="readonly" value="{{ entity.description }}">
+                    </td>
+                    <td>
+                        <input style="margin-bottom: 1px;" type="text" readonly="readonly" value="{{ entity.price|number_format(0, ',', ' ') }}">
+                    </td>
+                    <td class="text-right">
+                        <a title="Odstranit" style='margin-left: 5px' class="btn btn-xs btn-danger" href="{{ path('app_invoice_delete', {'invoiceItem_id': entity.id}) }}">
+                            <i class="fa fa-fw fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+            <tbody class="sep">
+            <tr>
+                <td colspan="3">
+                    <a class="btn btn-xs btn-default" title="nová položka" href="{{ path('app_invoice_create', {'commission_id' : commission.data.id}) }}">
+                        <i class="fa fa-fw fa-plus"></i> nová položka
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="grand-total">
+                <td colspan="1">SOUČET</td>
+                <td class="cell-sumSellingPriceReal">
+                    <input type="text" class="form-control" readonly="readonly" value="{{ commission2.invoiceItemsSum }}">
+                </td>
+                <td></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

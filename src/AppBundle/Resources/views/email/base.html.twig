@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="cs">
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Feeio mail</title>
+
+		<!-- Responsivní chování pro moderní e-mailové klienty, které neořezávají hlavičku, umění media query a respektují je. -->
+		<style type="text/css">
+			@media only screen and (max-width: 620px) {
+				table[class="wrapper"] {
+					width: 100%!important;
+				}
+
+				table[class="content"] {
+					font-size: 15px!important;
+					line-height: 22px!important;
+				}
+
+				h1 {
+					font-size: 35px!important;
+				}
+
+				h2 {
+					font-size: 25px!important;
+				}
+
+				a[class="btn"] {
+					margin-top: 20px;
+					padding: 14px 24px 14px 24px!important;
+				}
+			}
+		</style>
+	</head>
+
+
+	<!-- Základní styl -->
+	<body style="padding: 0 0 0 0; margin: 0 0 0 0; background-color: #f8f8f8; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+
+
+		<!-- Základní styl znovu v extra wrapperu - některé webmaily (např. Centrum) ořezávají nejen <head>, ale i <body> -->
+		<div style="padding: 0 0 0 0; margin: 0 0 0 0; background-color: #f8f8f8; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+
+
+			<!-- Základní obalující tabulka -->
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td style="padding: 0 10px 0 10px;">
+
+
+						<!-- Vnitřní tabulka s nastavenou šířkou -->
+						<table class="wrapper" width="600" align="center" style="background: #ffffff; border: 1px solid #ecf0f1; border-top: 0;" border="0" cellpadding="0" cellspacing="0">
+
+
+							<!-- Hlavička e-mailu -->
+							<tr>
+								<td class="header" style="height: 200px; background-color: #152739;" align="center">
+									<a title="Feeio.com" href="http://www.feeio.com/">
+										<img src="http://mailing.feeio.com/feeio-logo@2x.png" height="45" width="187" style="border: 0;" alt="Feeio">
+									</a>
+								</td>
+							</tr>
+
+
+							<!-- Obsahová část e-mailu  -->
+							<tr>
+								<td>
+
+									<!-- Extra tabulka pro obsahovou část e-mailu -->
+									<table class="content" width="100%" style="padding: 30px 30px 30px 30px; font-family: Arial, sans-serif; font-size: 14px; color: #2c3e50; line-height: 20px;" border="0" cellpadding="0" cellspacing="0">
+
+										<tr>
+											<td>
+
+
+												{% block email_content %}{% endblock %}
+
+
+											</td>
+										</tr>
+									</table>
+
+								</td>
+							</tr>
+
+
+							<!-- Patička e-mailu  -->
+							<tr>
+								<td>
+
+									<!-- Extra tabulka pro patičku e-mailu -->
+									<table style="width: 100%; font-family: Arial, sans-serif; color: #333333; font-size: 12px; height: 60px; background-color: #ecf0f1;">
+										<tr>
+											<td style="padding: 0 0 0 30px;">
+												&copy; 2015 Feeio, všechna práva vyhrazena
+											</td>
+											<td style="text-align: right; padding: 0 30px 0 0;">
+												<a style="color: #2c3e50; text-decoration: none;" title="Feeio" href="https://www.feeio.com/">www.feeio.com</a>
+											</td>
+										</tr>
+									</table>
+
+								</td>
+							</tr>
+						</table>
+
+
+					</td>
+				</tr>
+			</table>
+
+
+		</div>
+
+
+	</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = "Vytvoření profilu" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-create-profile {{ parent() }}{% endblock %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+
+
+	<div class="row">
+
+
+		<div class="col-lg-12">
+			<div class="page-header text-center">
+				<h2><i class="fa fa-fw fa-user"></i> Vytvoření profilu</h2>
+			</div> <!-- .page-header -->
+		</div> <!-- .col-lg-12 -->
+
+
+
+		<div class="col-lg-4 col-lg-offset-4">
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+					{{ form_start(form) }}
+
+					{{ form_widget(form) }}
+
+					<div class="text-center">
+						<input type="submit" class="btn-primary btn" value="Uložit jméno">
+					</div> <!-- .text-center -->
+
+					{{ form_end(form) }}
+				</div> <!-- .panel-body -->
+			</div> <!-- .panel -->
+
+		</div> <!-- .col-lg-6 -->
+
+
+	</div> <!-- .row -->
+
+
+{% endblock %}

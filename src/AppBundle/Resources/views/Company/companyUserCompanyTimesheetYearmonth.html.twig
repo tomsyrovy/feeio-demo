@@ -1,0 +1,96 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = userCompany.user.fullname ~ " v " ~ company.name ~ " - timesheety v " ~ yearmonth.code %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-company-user-timesheet {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<div class="row">
+		<div class="col-lg-12">
+			<a class="btn btn-back btn-sm btn-default" title="Zpět" href="{{ path('app_company_companyusercompanytimesheet', {'company_id': company.id, 'userCompany_id': userCompany.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+	<div class="page-header">
+		<div class="row">
+
+			<div class="col-lg-6">
+				<h2><i class="fa fa-fw fa-user"></i> {{ userCompany.user.fullname }}</h2>
+				<span class="label label-default"><i class="fa fa-fw fa-building"></i> {{ company.name }}</span>
+			</div> <!-- .col-lg-6 -->
+
+			<div class="col-lg-6 text-right">
+				<a class="btn btn-header btn-default" title="Upravit uživatele" href="{{ path("app_company_companyusercompanyupdate", {"company_id" : company.id, "userCompany_id" : userCompany.id}) }}"><i class="fa fa-fw fa-pencil"></i> Upravit</a>
+			</div> <!-- .col-lg-6 -->
+
+		</div> <!-- .row -->
+	</div> <!-- .page-header -->
+
+
+
+
+	<div class="row">
+		<div class="col-lg-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation"><a href="{{ path('app_company_companyusercompanydetail', {'company_id': company.id, 'userCompany_id': userCompany.id}) }}">Přehled</a></li>
+				{# <li role="presentation"><a href="#projects" aria-controls="projects" role="tab" data-toggle="tab">Aktivní projekty</a></li>#}
+				<li role="presentation" class="active"><a href="{{ path('app_company_companyusercompanytimesheet', {'company_id': company.id, 'userCompany_id': userCompany.id}) }}">Timesheety</a></li>
+			</ul>
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+	{% if timesheets|length > 0 %}
+
+		<br>
+
+		<!-- ========== Subcommissions table ========== -->
+
+		{% include 'TableBundle:inc:table_highchart.html.twig' %}
+
+		<div class="row">
+			<div class="col-lg-12">
+
+				<div class="panel panel-default">
+
+					{% include 'TableBundle:inc:table_preheader.html.twig' with { 'tableCode' : 'table-companyusercompanytimesheetlistyearmonth' } %}
+
+					<div class="table-responsive">
+						<table class="table table-hover timesheetlist-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+							<thead>
+							<tr>
+
+								{% include 'TableBundle:inc:table_header.html.twig' with { 'tableData' : tableData } %}
+
+							</tr>
+							</thead>
+
+							<tbody>
+
+							{% for row in timesheets %}
+
+								<tr class="timesheet-row">
+
+									{% include '@Table/inc/body/companyusercompanytimesheetlistyearmonth/table_row.html.twig' with { 'tableData' : tableData, 'row' : row } %}
+
+								</tr>
+
+							{% endfor %}
+
+							</tbody>
+
+						</table>
+
+					</div> <!-- .table-responsive -->
+
+				</div> <!-- .panel panel-default -->
+
+			</div> <!-- .col-lg-12 -->
+		</div> <!-- .row -->
+
+	{% endif %}
+
+
+{% endblock %}

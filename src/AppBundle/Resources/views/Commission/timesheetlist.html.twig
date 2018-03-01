@@ -1,0 +1,76 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = commission.name ~ " – timesheety " %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail page-commission-timesheet-list {{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'timesheety'} %}
+
+
+
+
+
+    <!-- ========== Commission nav ========== -->
+    {% include "@App/Commission/inc/commissionNav.html.twig" %}
+
+
+    {% if timesheets|length > 0 %}
+
+        <!-- ========== Subcommissions table ========== -->
+
+        {% include 'TableBundle:inc:table_highchart.html.twig' %}
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+
+                    {% include 'TableBundle:inc:table_preheader.html.twig' with { 'tableCode' : 'table-timesheetlist' } %}
+
+                    <div class="table-responsive">
+                        <table class="table table-hover timesheetlist-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+                            <thead>
+	                            <tr>
+
+	                                {% include 'TableBundle:inc:table_header.html.twig' with { 'tableData' : tableData } %}
+
+	                                <th data-graph-skip="1">
+	                                    <!-- Akce -->
+	                                </th>
+	                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for row in timesheets %}
+
+                                <tr class="timesheet-item-row">
+
+                                    {% include '@Table/inc/body/timesheetlist/table_row.html.twig' with { 'tableData' : tableData, 'row' : row } %}
+
+                                    <td class="timesheet-item-action">
+                                        <a title="Detail" class="btn btn-default btn-sm edit-budget text-info" href="{{ path('app_commission_timesheetlistyearmonth', {'commission_id' : commission.id, 'year' : row.timesheet.yearmonth.year, 'month' : row.timesheet.yearmonth.month}) }}"><i class="fa fa-fw fa-search"></i></a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div> <!-- .table-responsive -->
+
+                </div> <!-- .panel panel-default -->
+
+            </div> <!-- .col-lg-12 -->
+        </div> <!-- .row -->
+
+    {% endif %}
+
+
+{% endblock %}

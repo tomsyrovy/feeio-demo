@@ -1,0 +1,74 @@
+<script type="text/javascript">
+
+    var $form = $('#budgetForm');
+    var $selector = $("#budgetItems");
+    var $formCalx;
+
+
+    function addRelation(){
+
+        var prototype = $selector.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, $selector.children().length).replace(/__0__/g, $selector.children().length+1);
+
+        $selector.append(form);
+
+        updateCalcXPostAdd();
+
+        return false;
+
+    }
+
+    function removeRelation(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+
+        updateCalcXPostRemove();
+
+        return false;
+
+    }
+
+    function updateCalcXPostAdd(){
+
+        $formCalx.calx('update');
+        $formCalx.calx('getCell', 'B1000').setFormula('SUM(B1:B' + $selector.children().length+1 + ')');
+        $formCalx.calx('getCell', 'D1000').setFormula('SUM(D1:D' + $selector.children().length+1 + ')');
+
+    }
+
+    function updateCalcXPostRemove(){
+
+        $formCalx.calx('update');
+        $formCalx.calx('getCell', 'B1000').calculate();
+        $formCalx.calx('getCell', 'D1000').calculate();
+
+    }
+
+    $(document).ready(function() {
+
+        $form.find(".btn-add").click(function(e) {
+
+            e.preventDefault();
+
+            addRelation();
+
+        });
+
+        $form.on("click", ".btn-remove", function(e){
+
+            e.preventDefault();
+            removeRelation(this);
+
+        });
+
+        $formCalx = $form.calx();
+
+        updateCalcXPostAdd();
+        updateCalcXPostRemove();
+
+    });
+
+</script>

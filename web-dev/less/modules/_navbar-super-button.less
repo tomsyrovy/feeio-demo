@@ -1,0 +1,35 @@
+/**
+ * Navbar super button
+ */
+
+
+@media only screen and (min-width: @screen-xs) {
+	.navbar-super-button {
+		.fa-heart {
+			color: @orange;
+			.transition(.2s);
+		}
+
+		.dropdown {
+			> a {
+				padding: 20px 16px;
+				height: 60px;
+
+				&:hover {
+					.fa-plus-circle {
+						color: @brand-warning;
+						.transition(.1s);
+					}
+				}
+			}
+
+			&.open {
+				> a {
+					.fa-plus-circle {
+						color: @brand-warning;
+					}
+				}
+			}
+		}
+	}
+}

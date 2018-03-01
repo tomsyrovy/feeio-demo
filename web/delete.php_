@@ -1,0 +1,34 @@
+<?php
+
+// https://wordpress.org/support/topic/plugin-wp-super-cache-cannot-delete-cache-folder-after-uninstall
+
+function removeDir($dirname)
+{
+    if (!file_exists($dirname)) {
+        return false;
+    }
+    if (is_file($dirname)) {
+ 	echo ("deleting: " . $dirname . '<br>');
+        return unlink($dirname);
+    }
+    $dir = dir($dirname);
+    while (false !== $entry = $dir->read()) {
+        if ($entry == '.' || $entry == '..') {
+            continue;
+        }
+        echo ("deleting: " . $dirname . DIRECTORY_SEPARATOR . $entry . '<br>');
+        removeDir($dirname . DIRECTORY_SEPARATOR . $entry);
+    }
+    $dir->close();
+    return rmdir($dirname);
+}
+
+unlink("../app/cache");
+removeDir("../app/cache");
+
+//unlink("cache/.htaccess");
+//removeDir("cache/meta");
+//removeDir("cache/supercache");
+//removeDir("cache");
+
+?>

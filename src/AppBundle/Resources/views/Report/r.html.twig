@@ -1,0 +1,52 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = "Report" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-report{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Zakázka</th>
+                <th>Personální - množství plán</th>
+                <th>Personální - množství reál</th>
+                <th>Personální - nákup plán</th>
+                <th>Personální - nákup reál</th>
+                <th>Personální - prodej plán</th>
+                <th>Personální - prodej reál</th>
+                <th>Externí - množství plán</th>
+                <th>Externí - množství reál</th>
+                <th>Externí - nákup plán</th>
+                <th>Externí - nákup reál</th>
+                <th>Externí - prodej plán</th>
+                <th>Externí - prodej reál</th>
+                <th>Vyfakturováno</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row.n }}</td>
+                <td>{{ row.p_u_p|number_format(2, ',', '') }}</td>
+                <td>{{ row.p_u_r|number_format(2, ',', '') }}</td>
+                <td>{{ row.p_is_p|number_format(2, ',', '') }}</td>
+                <td>{{ row.p_is_r|number_format(2, ',', '') }}</td>
+                <td>{{ row.p_es_p|number_format(2, ',', '') }}</td>
+                <td>{{ row.p_es_r|number_format(2, ',', '') }}</td>
+                <td>{{ row.m_u_p|number_format(2, ',', '') }}</td>
+                <td>{{ row.m_u_r|number_format(2, ',', '') }}</td>
+                <td>{{ row.m_is_p|number_format(2, ',', '') }}</td>
+                <td>{{ row.m_is_r|number_format(2, ',', '') }}</td>
+                <td>{{ row.m_es_p|number_format(2, ',', '') }}</td>
+                <td>{{ row.m_es_r|number_format(2, ',', '') }}</td>
+                <td>{{ row.i }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

@@ -1,0 +1,86 @@
+<td class="commission-name" data-cell="A{{ loop.index }}">
+    {{ row.commission.name }}
+</td>
+
+<td class="title" data-cell="B{{ loop.index }}">
+    {% if row.title is defined %}
+        {{ row.title }}
+    {% endif %}
+</td>
+
+<td class="text-right" data-cell="C{{ loop.index }}">
+    {% if row.supplier.title is defined %}
+        {{ row.supplier.title }}
+    {% endif %}
+</td>
+
+<td class="text-right" data-cell="D{{ loop.index }}">
+    {% if row.yearmonthPlan.code is defined %}
+        {{ row.yearmonthPlan.code }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="E{{ loop.index }}">
+    {% if row.priceNonVatPlan is defined %}
+        {{ row.priceNonVatPlan }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="F{{ loop.index }}">
+    {% if row.vatRatePlan is defined %}
+        {{ row.vatRatePlan }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="G{{ loop.index }}">
+    {% if row.rebillingPriceNonVatPlan is defined %}
+        {{ row.rebillingPriceNonVatPlan }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="H{{ loop.index }}">
+    {% if row.rebillingVatRatePlan is defined %}
+        {{ row.rebillingVatRatePlan }}
+    {% endif %}
+</td>
+
+<td class="text-right" data-cell="I{{ loop.index }}">
+    {% if row.yearmonthReal.code is defined %}
+        {{ row.yearmonthReal.code }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="J{{ loop.index }}">
+    {% if row.priceNonVatReal is defined %}
+        {{ row.priceNonVatReal }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="K{{ loop.index }}">
+    {% if row.vatRateReal is defined %}
+        {{ row.vatRateReal }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="L{{ loop.index }}">
+    {% if row.rebillingPriceNonVatReal is defined %}
+        {{ row.rebillingPriceNonVatReal }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="M{{ loop.index }}">
+    {% if row.rebillingVatRateReal is defined %}
+        {{ row.rebillingVatRateReal }}
+    {% endif %}
+</td>
+
+<td class="text-right" data-cell="N{{ loop.index }}">
+    {% if row.receivedDocumentNumber is defined %}
+        {{ row.receivedDocumentNumber }}
+    {% endif %}
+</td>
+<td class="text-right" data-cell="O{{ loop.index }}">
+    {% if row.issuedDocumentNumber is defined %}
+        {{ row.issuedDocumentNumber }}
+    {% endif %}
+</td>
+
+{% set index = loop.index %}
+
+{% for column in tableData.userColumns %}
+
+    <td class="text-right" data-formula="{{ column.formula|replaceCalcx(index) }}"></td>
+
+{% endfor %}

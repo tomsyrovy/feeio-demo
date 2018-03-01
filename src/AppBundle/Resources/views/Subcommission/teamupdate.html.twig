@@ -1,0 +1,90 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = "Tým subzakázky " ~ subcommission.code %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-subcommission-create {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <a class="btn btn-info" title="Zpět" href="{{ path('app_subcommission_list', {'commission_id': commission.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+
+            <div class="page-header text-center">
+                <h2><i class="fa fa-fw fa-money"></i> {{ title }}</h2>
+            </div>
+        </div> <!-- .col-lg-12 -->
+
+
+        <div class="col-lg-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    {% include "@App/Subcommission/inc/subcommissionTeamForm.html.twig" with {"form" : form, "submitLabel" : "Uložit"} %}
+
+                </div> <!-- .panel-body -->
+            </div> <!-- .panel -->
+
+        </div> <!-- .col-lg-6 -->
+
+
+    </div> <!-- .row -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+        var $form = $('#teamForm');
+        var $selector = $("#relations");
+
+
+        function addRelation(){
+
+            var collectionHolder = $selector;
+            var prototype = collectionHolder.attr('data-prototype');
+
+            var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+            collectionHolder.append(form);
+
+            return false;
+
+        }
+
+        function removeRelation(that){
+
+            var name = $(that).attr('data-related');
+
+            $('[data-content="'+name+'"]').remove();
+            return false;
+
+        }
+
+        $(document).ready(function() {
+
+            $form.find(".btn-add").click(function(e) {
+
+                e.preventDefault();
+                addRelation();
+
+            });
+
+            $form.on("click", ".btn-remove", function(e){
+
+                e.preventDefault();
+                removeRelation(this);
+
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

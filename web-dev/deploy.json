@@ -1,0 +1,40 @@
+{
+	"local" : {
+		"url" : "local_url",
+		"path" : "local_path",
+		"database" : {
+			"name" : "local_db_name",
+			"user" : "local_db_user",
+			"password" : "local_db_pass",
+			"host" : "localhost"
+		}
+	},
+	"staging" : {
+		"url" : "staging_url",
+		"path" : "staging_path",
+		"ssh" : {
+			"user" : "staging_ssh_user",
+			"host" : "staging_ssh_host"
+		},
+		"database" : {
+			"name" : "staging_db_name",
+			"user" : "staging_db_user",
+			"password" : "staging_db_pass",
+			"host" : "localhost"
+		}
+	},
+	"production" : {
+		"url" : "production_url",
+		"path" : "production_path",
+		"ssh" : {
+			"user" : "production_ssh_user",
+			"host" : "production_ssh_host"
+		},
+		"database" : {
+			"name" : "production_db_name",
+			"user" : "production_db_user",
+			"password" : "production_db_pass",
+			"host" : "localhost"
+		}
+	},
+}

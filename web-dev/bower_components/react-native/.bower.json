@@ -1,0 +1,15 @@
+{
+  "name": "react-native",
+  "homepage": "https://github.com/facebook/react-native",
+  "version": "0.31.0",
+  "_release": "0.31.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.31.0",
+    "commit": "a738b5157e20575684e4245b4f7cb4f34a1d83d0"
+  },
+  "_source": "https://github.com/facebook/react-native.git",
+  "_target": "^0.31.0",
+  "_originalSource": "react-native",
+  "_direct": true
+}

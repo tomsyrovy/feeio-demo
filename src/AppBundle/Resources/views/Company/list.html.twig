@@ -1,0 +1,75 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Společnosti" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-company-list {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<div class="page-header">
+		<div class="row">
+			<div class="col-lg-6">
+				<h2><i class="fa fa-fw fa-building-o"></i> Společnosti</h2>
+			</div> <!-- .col-lg-6 -->
+
+			<div class="col-lg-6 text-right">
+				<a class="btn btn-header btn-warning" title="Založit novou společnost" href="{{ path('app_company_create') }}"><i class="fa fa-fw fa-plus"></i> Založit společnost</a>
+			</div> <!-- .col-lg-6 -->
+		</div> <!-- .row -->
+	</div> <!-- .page-header -->
+
+
+	{% if ownedCompanies|length == 0 %}
+
+		<div class="alert alert-warning" role="alert">
+			Nejste vlastníkem žádné společnosti.
+		</div> <!-- .alert -->
+
+	{% else %}
+
+		<div class="row">
+
+			{% for ownedCompany in ownedCompanies %}
+
+				<div class="col-lg-4">
+
+
+
+					<div class="panel panel-default panel-company">
+
+
+						<div class="panel-body">
+
+							<h4 class="company-header">
+								<a href="{{ path('app_company_detail', {'company_id': ownedCompany.id}) }}">
+									{{ ownedCompany.name }}
+								</a>
+							</h4> <!-- .company-header -->
+
+							<div class="company-users">
+								{% for userCompanyRelation in ownedCompany.userCompanyRelations %}
+
+									<div class="user-image" style="background-image: url({{ asset(userCompanyRelation.user.image.webPath) }});">
+										<a title="{{ userCompanyRelation.user.fullName }}" href="{{ path('app_company_companyusercompanydetail', {'company_id': userCompanyRelation.company.id, 'userCompany_id': userCompanyRelation.id}) }}"></a>
+									</div> <!-- .user-image -->
+
+								{% endfor %}
+
+							</div> <!-- .company-users -->
+
+							<a class="text-info edit-company" href="{{ path('app_company_detail', {'company_id': ownedCompany.id}) }}"><i class="fa fa-fw fa-gear"></i></a>
+						</div> <!-- .panel-body -->
+
+
+
+					</div> <!-- .panel .panel-default -->
+				</div> <!-- .col-lg-4 -->
+
+			{% endfor %}
+
+		</div> <!-- .row -->
+
+	{% endif %}
+
+
+{% endblock %}

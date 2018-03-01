@@ -1,0 +1,29 @@
+/**
+ * Secondary navbar
+ */
+
+
+.navbar-secondary {
+	display: none;
+}
+
+
+@media only screen and (min-width: @screen-sm) {
+	.navbar-secondary {
+		display: block;
+		top: 60px;
+		background: @purple-light;
+		min-height: 40px;
+		z-index: 100;
+
+		.navbar-nav {
+			> li {
+				> a {
+					padding-top: 9px;
+					padding-bottom: 9px;
+					//font-size: 15px;
+				}
+			}
+		}
+	}
+}

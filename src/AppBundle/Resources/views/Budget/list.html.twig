@@ -1,0 +1,80 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = commission.name ~ " - rozpočty " %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail page-budget-list{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'rozpočty'} %}
+
+    <!-- ========== Commission nav ========== -->
+    {% include "@App/Commission/inc/commissionNav.html.twig" %}
+
+    <div class="row">
+        <div class="col-lg-12 text-right">
+            <a class="btn btn-sub-header btn-warning" title="Vytvořit rozpočet" href="{{ path('app_budget_create', {'commission_id' : commission.id}) }}">
+                <i class="fa fa-fw fa-plus"></i> Nový rozpočet
+            </a>
+        </div> <!-- .col-lg-4 -->
+    </div>
+
+    {% if budgets|length > 0 %}
+
+        <!-- ========== Subcommissions table ========== -->
+
+        {% include 'TableBundle:inc:table_highchart.html.twig' %}
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+
+                    {% include 'TableBundle:inc:table_preheader.html.twig' with { 'tableCode' : 'table-budgets' } %}
+
+                    <div class="table-responsive">
+                        <table class="table table-hover budget-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+                            <thead>
+                            <tr>
+
+                                {% include 'TableBundle:inc:table_header.html.twig' with { 'tableData' : tableData } %}
+
+                                <th data-graph-skip="1">
+                                    <!-- Akce -->
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for budget in budgets %}
+
+                                <tr class="budget-row">
+
+                                    {% include '@Table/inc/body/budget/table_row.html.twig' with { 'tableData' : tableData, 'budget' : budget } %}
+
+                                    <td class="budget-action">
+                                        {#<a title="Duplikovat" class="btn btn-default btn-sm edit-budget text-info" href="#"><i class="fa fa-fw fa-clone"></i></a>#}
+                                        <a title="Upravit" class="btn btn-default btn-sm edit-budget text-info" href="{{ path('app_budget_update', {'commission_id' : commission.id, 'budget_id' : budget.id}) }}"><i class="fa fa-fw fa-pencil"></i></a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div> <!-- .table-responsive -->
+
+                </div> <!-- .panel panel-default -->
+
+            </div> <!-- .col-lg-12 -->
+        </div> <!-- .row -->
+
+    {% endif %}
+
+
+{% endblock %}

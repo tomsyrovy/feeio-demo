@@ -1,0 +1,36 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="col-lg-6 col-lg-offset-3">
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            {{ form_start(form, {'attr' : {'id' : 'commissionForm'}}) }}
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        {{ form_row(form.description) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        {{ form_row(form.price) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <input class="btn btn-primary" type="submit" value="{{ submitLabel }}">
+                    </div>
+                </div>
+
+            {{ form_end(form) }}
+
+        </div>
+        <!-- .panel-body -->
+    </div>
+    <!-- .panel -->
+
+</div> <!-- .col-lg-6 -->

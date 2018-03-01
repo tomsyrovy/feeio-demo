@@ -1,0 +1,326 @@
+{% if commission == null %}
+
+    {% set resetPath = path('app_cost_listall') %}
+
+{% else %}
+
+    {% set resetPath = path('app_cost_list', {'commission_id' : commission.id}) %}
+
+{% endif %}
+
+{% form_theme form "AppBundle:Form:form_filter_bootstrap_layout.html.twig" %}
+
+<style xmlns="http://www.w3.org/1999/html">
+    {#vlastní non-bootstrap třída#}
+    .input-group-filter {
+        width: 100%;
+    }
+    .input-group-filter .form-control:first-child {
+        width: 40%;
+        background: #eee;
+    }
+    .input-group-filter .form-control:last-child {
+        width: 60%;
+    }
+</style>
+
+
+<!-- Modal -->
+<div id="cost-filter" class="modal fade" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+			{# <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+				<h4 class="modal-title" id="myModalLabel">Filtr nákladů</h4>
+			</div> #}
+
+            {{ form_start(form, {'attr' : {'id' : 'costForm'}}) }}
+
+            <div class="modal-body">
+                <div class="panel-body">
+
+                    {{ form_start(form, {'attr' : {'id' : 'costForm'}}) }}
+
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading accordion-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <div class="panel-title">
+                                    Základní informace o nákladu
+                                </div>
+                            </div>  <!-- .panel-heading -->
+
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            {{ form_row(form.commission, {'label' : 'Zakázka'}) }}
+                                        </div> <!-- .col-lg-6 -->
+
+                                        <div class="col-lg-6">
+                                            {{ form_row(form.supplier, {'label' : 'Dodavatel'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            {{ form_row(form.title, {'label' : 'Název'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+                                </div> <!-- .panel-body -->
+                            </div> <!-- .panel-collapse -->
+                        </div> <!-- .panel -->
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading accordion-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                <div class="panel-title">
+                                    Plánované hodnoty
+                                </div>
+                            </div>  <!-- .panel-heading -->
+
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="panel-body">
+
+                                    {{ form_row(form.yearmonthPlan, {'label' : 'Datum uskutečnění'}) }}
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            {{ form_row(form.priceNonVatPlan, {'label' : 'Nákupní cena bez DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+
+                                        <div class="col-lg-4">
+                                            {{ form_row(form.vatRatePlan, {'label' : 'Sazba DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+
+                                    <hr>
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            {{ form_row(form.rebillingPriceNonVatPlan, {'label' : 'Prodejní cena bez DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+
+                                        <div class="col-lg-4">
+                                            {{ form_row(form.rebillingVatRatePlan, {'label' : 'Sazba DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+
+                                </div> <!-- .panel-body -->
+                            </div> <!-- .panel-collapse -->
+                        </div> <!-- .panel -->
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading accordion-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                <div class="panel-title">
+                                    Reálné hodnody
+                                </div>
+                            </div>
+
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                <div class="panel-body">
+
+                                    {{ form_row(form.yearmonthReal, {'label' : 'Datum uskutečnění'}) }}
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            {{ form_row(form.priceNonVatReal, {'label' : 'Nákupní cena bez DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+
+                                        <div class="col-lg-4">
+                                            {{ form_row(form.vatRateReal, {'label' : 'Sazba DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+
+                                    <hr>
+
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            {{ form_row(form.rebillingPriceNonVatReal, {'label' : 'Prodejní cena bez DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+
+                                        <div class="col-lg-4">
+                                            {{ form_row(form.rebillingVatRateReal, {'label' : 'Sazba DPH'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+
+                                </div> <!-- .panel-body -->
+                            </div> <!-- .panel-collapse -->
+                        </div> <!-- .panel -->
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading accordion-heading" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                <div class="panel-title">
+                                    Informace pro účetnictví a evidenci
+                                </div>
+                            </div>
+
+                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            {{ form_row(form.receivedDocumentNumber, {'label' : 'Ev. číslo přijatého dokladu'}) }}
+                                        </div> <!-- .col-lg-6 -->
+
+                                        <div class="col-lg-6">
+                                            {{ form_row(form.issuedDocumentNumber, {'label' : 'Ev. číslo vydaného dokladu'}) }}
+                                        </div> <!-- .col-lg-6 -->
+                                    </div> <!-- .row -->
+                                </div> <!-- .panel-body -->
+                            </div> <!-- .panel-collapse -->
+                        </div> <!-- .panel -->
+
+
+                    </div> <!-- .panel-group -->
+
+
+                    <div class="text-center">
+                        <input class="btn btn-primary" type="submit" name="submit-filter" value="Filtrovat">
+                    </div>
+
+                    {{ form_end(form) }}
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{#<div class="panel-group">#}
+    {#<div class="panel panel-default">#}
+        {#<div class="panel-heading">#}
+            {#<div class="panel-title">#}
+                {#<div class="row">#}
+                    {#<div class="col-xs-6">#}
+                        {#<a data-toggle="collapse" href="#collapse1"><i class="fa fa-caret-down"></i> Filtrovat náklady</a>#}
+                    {#</div>#}
+                    {#<div class="col-xs-6 text-right">#}
+                        {#{% if canResetFilterForm %}#}
+                            {#<a href="{{ resetPath }}" class="btn btn-sm btn-danger"><i class="fa fa-fw fa-times"></i> Resetovat filtr</a>#}
+                        {#{% endif %}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+        {#<div class="panel-collapse collapse" id="collapse1">#}
+
+            {#{{ form_start(form, {'attr' : {'id' : 'costForm'}}) }}#}
+
+                {#<div class="panel-body">#}
+
+                    {#<fieldset>#}
+                        {#<legend>Základní informace o nákladu</legend>#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-6">#}
+                                {#{{ form_row(form.commission, {'label' : 'Zakázka'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+
+                            {#<div class="col-lg-6">#}
+                                {#{{ form_row(form.supplier, {'label' : 'Dodavatel'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-12">#}
+                                {#{{ form_row(form.title, {'label' : 'Název'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                    {#</fieldset>#}
+
+                    {#<fieldset>#}
+                        {#<legend>Plánované hodnoty</legend>#}
+
+                        {#{{ form_row(form.yearmonthPlan, {'label' : 'Datum uskutečnění'}) }}#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-8">#}
+                                {#{{ form_row(form.priceNonVatPlan, {'label' : 'Nákupní cena bez DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+
+                            {#<div class="col-lg-4">#}
+                                {#{{ form_row(form.vatRatePlan, {'label' : 'Sazba DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-8">#}
+                                {#{{ form_row(form.rebillingPriceNonVatPlan, {'label' : 'Prodejní cena bez DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+
+                            {#<div class="col-lg-4">#}
+                                {#{{ form_row(form.rebillingVatRatePlan, {'label' : 'Sazba DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                    {#</fieldset>#}
+
+                    {#<fieldset>#}
+                        {#<legend>Reálné hodnoty</legend>#}
+
+                        {#{{ form_row(form.yearmonthReal, {'label' : 'Datum uskutečnění'}) }}#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-8">#}
+                                {#{{ form_row(form.priceNonVatReal, {'label' : 'Nákupní cena bez DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+
+                            {#<div class="col-lg-4">#}
+                                {#{{ form_row(form.vatRateReal, {'label' : 'Sazba DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-8">#}
+                                {#{{ form_row(form.rebillingPriceNonVatReal, {'label' : 'Prodejní cena bez DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+
+                            {#<div class="col-lg-4">#}
+                                {#{{ form_row(form.rebillingVatRateReal, {'label' : 'Sazba DPH'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                    {#</fieldset>#}
+
+                    {#<fieldset>#}
+                        {#<legend>Informace pro účetnictví a evidenci</legend>#}
+
+                        {#<div class="row">#}
+                            {#<div class="col-lg-6">#}
+                                {#{{ form_row(form.receivedDocumentNumber, {'label' : 'Ev. číslo přijatého dokladu'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+
+                            {#<div class="col-lg-6">#}
+                                {#{{ form_row(form.issuedDocumentNumber, {'label' : 'Ev. číslo vydaného dokladu'}) }}#}
+                            {#</div> <!-- .col-lg-6 -->#}
+                        {#</div> <!-- .row -->#}
+
+                    {#</fieldset>#}
+
+                {#</div> <!-- .panel-body -->#}
+
+                {#<div class="panel-footer">#}
+
+                    {#<div class="text-center">#}
+                        {#<input class="btn btn-primary" type="submit" name="submit-filter" value="Filtrovat">#}
+                        {#{% if canResetFilterForm %}#}
+                            {#<a href="{{ resetPath }}" class="btn btn-sm btn-danger">Resetovat filtr</a>#}
+                        {#{% endif %}#}
+                    {#</div>#}
+
+                {#</div>#}
+
+            {#{{ form_end(form) }}#}
+
+        {#</div>#}
+    {#</div>#}
+{#</div>#}

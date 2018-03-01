@@ -1,0 +1,39 @@
+/**
+ * Sortable
+ */
+
+
+.sortable {
+	padding: 10px;
+	background: @grey-light;
+	border-radius: @border-radius-base;
+	border: 1px dashed darken(@grey-light, 20%);
+	margin-bottom: 15px;
+}
+
+.sortable-item {
+	border: 1px solid darken(@grey-light, 20%);
+	margin: 0 0 5px 0;
+	padding: 5px 10px;
+	background: #fff;
+	cursor: move;
+	border-radius: @border-radius-base;
+	font-size: 13px;
+
+	&:hover {
+		background: darken(@grey-light, 20%);
+		color: #fff;
+	}
+
+	&:last-of-type {
+		margin-bottom: 0;
+	}
+}
+
+.sortable-item-placeholder {
+	margin: 0 0 5px 0;
+	border-radius: @border-radius-base;
+	height: 30px;
+	border: 1px dashed darken(@grey-light, 5%);
+	background: #fff;
+}

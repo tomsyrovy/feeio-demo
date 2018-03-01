@@ -1,0 +1,40 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% if yearmonthAllocation %}
+    {% set title = "Alokování zdrojů pro " ~ commission.code ~ " v " ~ allocationContainer.yearmonth.code %}
+    {% set type = "allocation" %}
+{% else %}
+    {% set title = "Rozpočet pro " ~ commission.code %}
+    {% set type = "budget" %}
+{% endif %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-contact-create {{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <a class="btn btn-info" title="Zpět" href="{{ path('app_allocation_list', {'commission_id': commission.id, "type" : type}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+
+            <div class="page-header text-center">
+                <h2><i class="fa fa-fw fa-briefcase"></i> {{ title }}</h2>
+            </div>
+        </div> <!-- .col-lg-12 -->
+
+        {% include "@App/Allocation/inc/form.html.twig" with {"form" : form, "submitLabel" : "Vytvořit", "yearmonthAllocation" : yearmonthAllocation} %}
+
+
+    </div> <!-- .row -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% include '@App/Allocation/inc/formJS.html.twig' with {"commission" : commission, "yearmonthAllocation" : yearmonthAllocation} %}
+
+{% endblock %}

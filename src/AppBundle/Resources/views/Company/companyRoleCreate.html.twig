@@ -1,0 +1,47 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = "Vytvořit roli" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-company-roles-create {{ parent() }}{% endblock %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+
+
+	<div class="row">
+
+		<div class="col-lg-12">
+			<a class="btn btn-info" title="Zpět" href="{{ path('app_company_companyroles', {"company_id" : company.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+
+			<div class="page-header text-center">
+				<h2><i class="fa fa-fw fa-user-plus"></i> Vytvořit roli</h2>
+			</div>
+		</div> <!-- .col-lg-12 -->
+
+
+
+		<div class="col-lg-4 col-lg-offset-4">
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+
+					{{ form_start(form) }}
+
+
+					{{ form_widget(form) }}
+						<div class="text-center">
+							<input class="btn btn-primary" type="submit" value="Vytvořit">
+						</div>
+					{{ form_end(form) }}
+
+
+				</div> <!-- .panel-body -->
+			</div> <!-- .panel -->
+
+		</div> <!-- .col-lg-6 -->
+
+
+	</div> <!-- .row -->
+
+
+{% endblock %}

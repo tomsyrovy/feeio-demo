@@ -1,0 +1,17 @@
+<td data-cell="A{{ loop.index }}">
+    {{ row.timesheet.yearmonth.code }}
+</td>
+<td data-cell="B{{ loop.index }}">
+    {{ row.duration_sum }}
+</td>
+<td data-cell="C{{ loop.index }}">
+    {{ row.timesheet_count }}
+</td>
+
+{% set index = loop.index %}
+
+{% for column in tableData.userColumns %}
+
+    <td class="text-right" data-formula="{{ column.formula|replaceCalcx(index) }}"></td>
+
+{% endfor %}

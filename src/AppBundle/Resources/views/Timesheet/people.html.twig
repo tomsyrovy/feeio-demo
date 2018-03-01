@@ -1,0 +1,236 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Moji lidé" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-timesheet-list {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<!-- ========== Page Header ========== -->
+	<div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Moji lidé</h1>
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+	<div class="row">
+		<div class="col-lg-12 text-right">
+            {{ render(controller('AppBundle:TimeWindow:index')) }}
+		</div>
+	</div>
+	<br>
+
+    {% if aus|length > 0 %}
+		<div class="row">
+			<div class="col-lg-12">
+
+				<div class="panel panel-default">
+
+					<div class="table-responsive">
+						<table class="table table-bordered" style="font-size: 12px;">
+
+							<thead>
+							<tr>
+								<th rowspan="2">plánované a odpracované hodiny</th>
+                                {% for jobConsultant in jobConsultants %}
+									<th colspan="2" class="text-center" style="white-space: nowrap">
+                                        {{ jobConsultant.fullName }}
+										<a title="Detail" class="btn btn-xs btn-default" href="{{ path('app_person_default', {'person_id': jobConsultant.id}) }}">
+											<i class="fa fa-fw fa-search"></i>
+										</a>
+										<a title="Export timesheetů" class="btn btn-xs btn-default" href="{{ path('app_export_timesheetsofuserinyearmonth', {'user_id': jobConsultant.id, 'yearmonth_id' : ym.id}) }}">
+											<i class="fa fa-fw fa-file-excel-o"></i>
+										</a>
+									</th>
+                                {% endfor %}
+								<th colspan="2" class="text-center">
+									CELKEM
+								</th>
+								<th rowspan="2"></th>
+							</tr>
+							<tr>
+                                {% for jobConsultant in jobConsultants %}
+									<th class="text-center">
+										plán
+									</th>
+									<th class="text-center">
+										reál
+									</th>
+                                {% endfor %}
+								<th class="text-center">
+									plán
+								</th>
+								<th class="text-center">
+									reál
+								</th>
+							</tr>
+							</thead>
+
+							<tbody>
+
+                            {% for commission in commissionsInAu %}
+
+								<tr>
+									<th style="white-space: nowrap">
+                                        {{ commission.name }} ({{ commission.nameOwn }})
+										<a title="Export timesheetů" class="btn btn-xs btn-default" href="{{ path('app_export_timesheetsofcommission', {'commission_id': commission.id}) }}">
+											<i class="fa fa-fw fa-file-excel-o"></i>
+										</a>
+									</th>
+                                    {% for jobConsultant in jobConsultants %}
+										<td class="text-center" data-original-title="{{ commission.nameOwn }} ({{ commission.name }}) / {{ jobConsultant.fullName }} / plán" data-container="body" data-toggle="tooltip" data-placement="bottom" title="">
+                                            {% if aus['c' ~ commission.id ~ '_u' ~ jobConsultant.id] is defined %}
+                                                {{ aus['c' ~ commission.id ~ '_u' ~ jobConsultant.id].hoursPlan|number_format(0, ".", " ") }}
+                                            {% endif %}
+										</td>
+										<td class="text-center" data-original-title="{{ commission.nameOwn }} ({{ commission.name }}) / {{ jobConsultant.fullName }} / reál" data-container="body" data-toggle="tooltip" data-placement="bottom" title="">
+                                            {% if aus['c' ~ commission.id ~ '_u' ~ jobConsultant.id] is defined and aus['c' ~ commission.id ~ '_u' ~ jobConsultant.id].hoursReal is not null %}
+                                                {{ aus['c' ~ commission.id ~ '_u' ~ jobConsultant.id].hoursReal|number_format(2, ".", " ") }}
+                                            {% endif %}
+										</td>
+                                    {% endfor %}
+									<td class="text-center" data-original-title="{{ commission.nameOwn }} ({{ commission.name }}) / CELKEM / plán" data-container="body" data-toggle="tooltip" data-placement="bottom" title="">
+                                        {% if freeHoursSum['c' ~ commission.id]['plan'] is defined %}
+											<strong>{{ freeHoursSum['c' ~ commission.id]['plan']|number_format(0, ".", " ") }}</strong>
+                                        {% endif %}
+									</td>
+									<td class="text-center" data-original-title="{{ commission.nameOwn }} ({{ commission.name }}) / CELKEM / reál" data-container="body" data-toggle="tooltip" data-placement="bottom" title="">
+                                        {% if freeHoursSum['c' ~ commission.id]['real'] is defined %}
+											<strong>{{ freeHoursSum['c' ~ commission.id]['real']|number_format(2, ".", " ") }}</strong>
+                                        {% endif %}
+									</td>
+									<th style="white-space: nowrap">
+                                        {{ commission.name }} ({{ commission.nameOwn }})
+										<a title="Export timesheetů" class="btn btn-xs btn-default" href="{{ path('app_export_timesheetsofcommission', {'commission_id': commission.id}) }}">
+											<i class="fa fa-fw fa-file-excel-o"></i>
+										</a>
+									</th>
+								</tr>
+
+                            {% endfor %}
+
+							</tbody>
+							<tfoot>
+
+							<tr>
+								<th class="text-center">
+									CELKEM
+								</th>
+                                {% for jobConsultant in jobConsultants %}
+									<td class="text-center" data-original-title="CELKEM / {{ jobConsultant.fullName }} / plán" data-container="body" data-toggle="tooltip" data-placement="bottom" title="">
+                                        {% if freeHoursSum['u' ~ jobConsultant.id]['plan'] is defined %}
+											<strong>{{ freeHoursSum['u' ~ jobConsultant.id]['plan']|number_format(0, ".", " ") }}</strong>
+                                        {% endif %}
+									</th>
+									<td class="text-center" data-original-title="CELKEM / {{ jobConsultant.fullName }} / reál" data-container="body" data-toggle="tooltip" data-placement="bottom" title="">
+                                        {% if freeHoursSum['u' ~ jobConsultant.id]['real'] is defined %}
+											<strong>{{ freeHoursSum['u' ~ jobConsultant.id]['real']|number_format(2, ".", " ") }}</strong>
+                                        {% endif %}
+									</th>
+                                {% endfor %}
+								<th colspan="3" rowspan="4"></th>
+							</tr>
+							<tr>
+								<th rowspan="2"></th>
+                                {% for jobConsultant in jobConsultants %}
+									<th class="text-center">
+										plán
+									</th>
+									<th class="text-center">
+										reál
+									</th>
+                                {% endfor %}
+							</tr>
+							<tr>
+
+                                {% for jobConsultant in jobConsultants %}
+									<th colspan="2" class="text-center" style="white-space: nowrap">
+                                        {{ jobConsultant.fullName }}
+										<a title="Detail" class="btn btn-xs btn-default" href="{{ path('app_person_default', {'person_id': jobConsultant.id}) }}">
+											<i class="fa fa-fw fa-search"></i>
+										</a>
+										<a title="Export timesheetů" class="btn btn-xs btn-default" href="{{ path('app_export_timesheetsofuserinyearmonth', {'user_id': jobConsultant.id, 'yearmonth_id' : ym.id}) }}">
+											<i class="fa fa-fw fa-file-excel-o"></i>
+										</a>
+									</th>
+                                {% endfor %}
+							</tr>
+
+
+							</tfoot>
+
+						</table>
+					</div> <!-- .table-responsive -->
+
+				</div> <!-- .panel panel-default -->
+
+			</div> <!-- .col-lg-12 -->
+		</div> <!-- .row -->
+	{% else %}
+		<div class="row">
+			<div class="col-lg-12">
+				<p>Není možné zobrazit tabulku "Moji lidé". Zkuste zvolit pouze jeden měsíc pro zobrazení.</p>
+			</div>
+		</div>
+    {% endif %}
+
+    {#{% if freeHours|length > 0 %}#}
+		{#<h4>Volné hodiny</h4>#}
+		{#<div class="row">#}
+			{#<div class="col-lg-12">#}
+
+				{#<div class="panel panel-default">#}
+
+					{#<div class="table-responsive">#}
+						{#<table class="table table-bordered" style="font-size: 12px;">#}
+
+							{#<thead>#}
+							{#<tr>#}
+								{#<th></th>#}
+                                {#{% for person in persons %}#}
+									{#<th class="text-center">#}
+                                        {#{{ person.fullName }}#}
+									{#</th>#}
+                                {#{% endfor %}#}
+							{#</tr>#}
+							{#</thead>#}
+
+							{#<tbody>#}
+
+                            {#{% for yearmonth in yearmonths %}#}
+
+								{#<tr>#}
+									{#<th style="white-space: nowrap;">#}
+                                        {#{{ yearmonth.code }}#}
+									{#</th>#}
+                                    {#{% for person in persons %}#}
+										{#<td class="text-center">#}
+                                            {#{{ freeHours['u' ~ person.id ~ '_ym' ~ yearmonth.id] }}#}
+										{#</td>#}
+                                    {#{% endfor %}#}
+
+								{#</tr>#}
+
+                            {#{% endfor %}#}
+
+							{#</tbody>#}
+
+						{#</table>#}
+					{#</div> <!-- .table-responsive -->#}
+
+				{#</div> <!-- .panel panel-default -->#}
+
+			{#</div> <!-- .col-lg-12 -->#}
+		{#</div> <!-- .row -->#}
+    {#{% else %}#}
+		{#<div class="row">#}
+			{#<div class="col-lg-12">#}
+				{#<p>Není možné zobrazit tabulku "Volné hodiny".</p>#}
+			{#</div>#}
+		{#</div>#}
+    {#{% endif %}#}
+
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends '::layout-secured.html.twig' %}
+
+{#{% set commission = commissionUserCompany.commission %}#}
+{#{% set client = commissionUserCompany.commission.client %}#}
+{#{% set company = commissionUserCompany.commission.company %}#}
+
+
+{% set title = commission.data.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+    <style>
+        .table-form {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .table-form td {
+            padding: 0 1px 0 0;
+            vertical-align: top;
+        }
+        .table-form td input, .table-form td select {
+            width: 100%;
+            height: auto;
+            border: solid 1px #ecf0f1;
+            border-radius: 4px;
+            padding: 3px 4px;
+        }
+        .table-form td select {
+            padding: 1px 4px;
+        }
+        .table-form .top-content td {
+            font-size: inherit;
+            vertical-align: middle;
+        }
+        .table-form .top-content input, .table-form .top-content select {
+            font-size: inherit;
+        }
+        .table-form .middle-label td {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .table-form .middle-label .type td {
+            font-weight: normal;
+            font-size: 11px;
+        }
+        .table-form .middle-content input, .table-form .low-content input, .table-form .middle-content select, .table-form .low-content select {
+            font-size: 11px;
+        }
+        .table-form .total {
+            border-top: 1px solid #000;
+        }
+        .table-form .total td {
+            font-weight: bold;
+        }
+        .table-form .low-content td {
+            padding-top: 3px;
+            padding-bottom: 40px;
+        }
+        .table-form .sep td {
+            padding-bottom: 3px;
+        }
+        .table-form .grand-total {
+            border-top: 3px solid #000;
+        }
+        .table-form .grand-total td {
+            font-weight: bold;
+            font-size: 16px;
+            padding-top: 3px;
+        }
+    </style>
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'přehled'} %}
+
+    {% if choosedAllocation is null %}
+        <div class="row">
+            <div class="col-lg-12">
+                <p><i class="fa fa-fw fa-info"></i> Zakázka musí mít právě jeden rozpočet schválený klientem.</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if commission.data.allocationContainers|length == 0 %}
+        <div class="alert alert-warning" role="alert">
+            Není zde žádný rozpočet.
+        </div> <!-- .alert -->
+    {% else %}
+
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs">
+                    {% for ac in allocations %}
+                        <li class="nav-item{% if allocationContainer.id == ac.id %} active{% endif %}">
+                            <a class="nav-link" href="{{ path('app_commission_detail_allocation', {'commission_id' : commission.data.id, 'allocation_id': ac.id}) }}">
+                                {% if ac.clientApproved %}
+                                    <i class="fa fa-fw fa-check-circle"></i>
+                                {% endif %}
+                                <small>verze {{ ac.version }}</small>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 text-right">
+                {% set ac = allocationContainer %}
+
+                {% if ac.clientApproved %}
+                    <a title="Duplikovat" class="btn btn-sm btn-default" href="{{ path('app_allocation_duplicate', {'allocation_id': ac.id}) }}">
+                        <i class="fa fa-fw fa-copy"></i> duplikovat rozpočet (nová verze)
+                    </a>
+                {% else %}
+                    <a title="Označit jako schválený klientem" class="btn btn-sm btn-default" href="{{ path('app_allocation_choose', {'allocation_id': ac.id}) }}">
+                        <i class="fa fa-fw fa-check-circle"></i> označit rozpočet jako schválený klientem
+                    </a>
+                    {% if choosedAllocation is not null %}
+                        <a title="Odstranit" class="btn btn-sm btn-default" href="{{ path('app_allocation_delete', {'allocation_id': ac.id}) }}">
+                            <i class="fa fa-fw fa-trash"></i> odstranit verzi rozpočtu
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <br>
+
+        {% include "@App/Allocation/inc/form_2.html.twig" with {"form" : form, "ac" : ac, "submitLabel" : "Uložit"} %}
+
+    {% endif %}
+
+    {#<h3>Fakturace</h3>#}
+
+    {#<div class="panel panel-default">#}
+        {#<div class="panel-body">#}
+            {#{{ render(controller('AppBundle:Invoice:list', { 'commission_id': commission.data.id })) }}#}
+        {#</div>#}
+    {#</div>#}
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% include '@App/Allocation/inc/formJS_2.html.twig' with {"commission" : commission.data} %}
+
+{% endblock %}

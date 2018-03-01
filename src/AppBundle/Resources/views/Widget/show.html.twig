@@ -1,0 +1,52 @@
+{% if widgetDOs|length > 0 %}
+
+    <div class="row">
+
+        {% for widgetDO in widgetDOs %}
+
+            <div class="col-md-4 col-sm-3 col-xs-2">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>{{ widgetDO.widget.name }}</h4>
+                        <h1>
+                            {{ widgetDO.result[0][0]['result']|round(1) }}{{ widgetDO.widget.unit|raw }}
+                            {% if widgetDO.result[1][0]['result'] is defined %}
+                                <small>(z {{ widgetDO.result[1][0]['result'] }})</small>
+                            {% endif %}
+                        </h1>
+                        {% if widgetDO.result[1][0]['result'] is defined %}
+
+                            {% set completedPercent = (widgetDO.result[0][0]['result']/widgetDO.result[1][0]['result']*100)|round(1) %}
+                            {#{% set diff = (widgetDO.result[1][0]['result']-widgetDO.result[0][0]['result']) %}#}
+
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ completedPercent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ completedPercent }}%">
+                                    <span class="sr-only">{{ completedPercent }}% hotovo</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                            </div>
+                        {% endif %}
+                    </div> <!-- .panel-body -->
+                </div> <!-- .panel -->
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <div class="alert alert-warning">Nemáte vytvořený žádný widget.</div>
+
+        </div>
+
+    </div>
+
+{% endif %}

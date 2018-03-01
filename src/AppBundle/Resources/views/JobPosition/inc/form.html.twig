@@ -1,0 +1,22 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="col-lg-4 col-lg-offset-4">
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            {{ form_start(form) }}
+
+                {{ form_widget(form) }}
+
+                <div class="text-center">
+                    <input class="btn btn-primary" type="submit" value="{{ submitLabel }}">
+                </div>
+
+            {{ form_end(form) }}
+
+
+        </div> <!-- .panel-body -->
+    </div> <!-- .panel -->
+
+</div> <!-- .col-lg-6 -->

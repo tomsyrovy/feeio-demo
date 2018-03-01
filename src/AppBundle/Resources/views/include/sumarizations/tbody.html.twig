@@ -1,0 +1,49 @@
+<td class="text-right">
+{% if row.sums.buyingPricePlan is defined and row.sums.buyingPricePlan %}
+    {{ row.sums.buyingPricePlan|number_format(0, ',', ' ') }}
+{% endif %}
+</td>
+<td class="text-right">
+{% if row.sums.sellingPricePlan is defined and row.sums.sellingPricePlan %}
+    {{ row.sums.sellingPricePlan|number_format(0, ',', ' ') }}
+{% endif %}
+</td>
+<td class="text-right">
+{% if row.sums.profitPlan is defined and row.sums.profitPlan %}
+    {{ row.sums.profitPlan|number_format(0, ',', ' ') }}
+{% endif %}
+</td>
+<td class="text-right">
+{% if row.sums.buyingPriceReal is defined and row.sums.buyingPriceReal %}
+    {{ row.sums.buyingPriceReal|number_format(0, ',', ' ') }}
+{% endif %}
+</td>
+<td class="text-right">
+{% if row.sums.invoicePrice is defined and row.sums.invoicePrice %}
+    {{ row.sums.invoicePrice|number_format(0, ',', ' ') }}
+{% endif %}
+</td>
+<td class="text-right">
+{% if row.sums.profitReal is defined and row.sums.profitReal and row.sums.invoicePrice is defined and row.sums.invoicePrice  %}
+    {{ row.sums.profitReal|number_format(0, ',', ' ') }}
+{% endif %}
+</td>
+
+{#<td class="text-right">#}
+    {#{{ row.sums.getBuyingPricePlan() }}#}
+{#</td>#}
+{#<td class="text-right">#}
+    {#{{ row.sums.getSellingPricePlan() }}#}
+{#</td>#}
+{#<td class="text-right">#}
+    {#{{ row.sums.getProfitPlan() }}#}
+{#</td>#}
+{#<td class="text-right">#}
+    {#{{ row.sums.getBuyingPriceReal() }}#}
+{#</td>#}
+{#<td class="text-right">#}
+    {#{{ row.sums.getSellingPriceReal() }}#}
+{#</td>#}
+{#<td class="text-right">#}
+    {#{{ row.sums.getProfitReal() }}#}
+{#</td>#}

@@ -1,0 +1,21 @@
+{% for column in tableData.table.tableDefaultColumns %}
+
+    {% if tableData.userDefaultColumns[column.id] is not defined or not tableData.userDefaultColumns[column.id].hidden %}
+        <th class="{{ column.property }}" data-cell="{{ column.code }}1" data-visibility="1">
+            {{ column.title|replace({'(plán)' : '<sup>plán</sup>'})|replace({'(reál)' : '<sup>reál</sup>'})|raw }}
+        </th>
+    {% else %}
+        <th class="{{ column.property }}" data-cell="{{ column.code }}1" data-visibility="0" data-graph-skip="1">
+            {{ column.title|replace({'(plán)' : '<sup>plán</sup>'})|replace({'(reál)' : '<sup>reál</sup>'})|raw }}
+        </th>
+    {% endif %}
+
+{% endfor %}
+
+{% for column in tableData.userColumns %}
+
+    <th>
+        {{ column.title }}
+    </th>
+
+{% endfor %}

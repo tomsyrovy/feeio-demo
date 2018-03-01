@@ -1,0 +1,108 @@
+/**
+ * Page Timesheet
+ */
+
+
+.page-timesheet-list {
+	.timesheet-watch {
+		margin-top: 30px;
+		margin-bottom: 45px;
+
+		.well {
+			background: @grey-light;
+			border: 0;
+			// box-shadow: none;
+			// padding: 8px;
+
+			.flash {
+			  -moz-animation: flash 1s ease-out;
+			  -moz-animation-iteration-count: 1;
+
+			  -webkit-animation: flash 1s ease-out;
+			  -webkit-animation-iteration-count: 1;
+
+			  -ms-animation: flash 1s ease-out;
+			  -ms-animation-iteration-count: 1;
+			}
+
+			@-webkit-keyframes flash {
+			    0% { background-color: none; }
+			    50% { background-color: @highlight; }
+			    100% { background-color: none; }
+			}
+
+			@-moz-keyframes flash {
+			    0% { background-color: none; }
+			    50% { background-color: @highlight; }
+			    100% { background-color: none; }
+			}
+
+			@-ms-keyframes flash {
+			    0% { background-color: none; }
+			    50% { background-color: @highlight; }
+			    100% { background-color: none; }
+			}
+		}
+
+		.form-group {
+			margin-bottom: 0;
+		}
+
+		.col {
+			@media only screen and (min-width: @screen-lg-min) {
+				padding: 0 2px;
+
+				&:first-of-type {
+					padding-left: @grid-gutter-width/2;
+				}
+
+				&:last-of-type {
+					padding-right: @grid-gutter-width/2;
+				}
+			}
+		}
+
+		.btn {
+			padding-top: 8px;
+			padding-bottom: 9px;
+			margin-top: 2px;
+		}
+
+		.input-group-addon {
+			background: #f7f7f7;
+			border-width: 2px;
+		}
+	}
+
+	.timesheet-sorting {
+		margin-top: 70px;
+
+		.dropdown {
+			display: inline-block;
+		}
+	}
+
+	.timesheet-panel {}
+
+	.timesheet-item-row {
+		&:hover {
+			a {
+				visibility: visible;
+			}
+		}
+	}
+
+	.timesheet-date-col {
+		min-width: 150px !important;
+	}
+
+	.timesheet-action-col {
+		min-width: 100px !important;
+	}
+
+	.timesheet-item-action {
+		a {
+			visibility: hidden;
+		}
+	}
+}

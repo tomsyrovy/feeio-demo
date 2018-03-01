@@ -1,0 +1,46 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = "Pozvánky do společností" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-invitations {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<div class="row">
+
+
+		<div class="col-lg-12">
+			<div class="page-header text-center">
+				<h2><i class="fa fa-fw fa-envelope-o"></i> Pozvánka do společnosti</h2>
+			</div> <!-- .page-header -->
+		</div> <!-- .col-lg-12 -->
+
+
+		<div class="col-lg-4 col-lg-offset-4">
+
+			<div class="panel panel-default">
+				<div class="panel-body text-center">
+					{% for invitation in invitations %}
+
+						<p class="invitation-text">
+							<strong>{{ invitation.author.fullname }}</strong> tě pozval/a do společnosti <strong>{{ invitation.company.name }}</strong>.
+						</p>
+
+						<!-- {{ invitation.created|date("j. n. y H:i") }} -->
+						<!-- {{ invitation.role.name }} -->
+
+						<a class="btn btn-success" href="{{ path('app_invitation_invitationrespond', {'invitation_id': invitation.id, 'respond_type': "accepted"}) }}"><i class="fa fa-fw fa-check"></i> Přijmout</a>
+
+						<a class="btn btn-danger" href="{{ path('app_invitation_invitationrespond', {'invitation_id': invitation.id, 'respond_type': "rejected"}) }}"><i class="fa fa-fw fa-times"></i> Zamítnout</a>
+
+					{% endfor %}
+				</div> <!-- .panel-body -->
+			</div> <!-- .panel -->
+
+		</div> <!-- .col-lg-6 -->
+
+
+	</div> <!-- .row -->
+
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{
+    "name": "query/feeio2",
+    "autoload": {
+        "psr-4": { "": "src/", "SymfonyStandard\\": "app/SymfonyStandard/" }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "kozleek/vokativ-xml",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/kozleek/vokativ-xml",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=5.3.9",
+        "symfony/symfony": "2.8.*",
+        "doctrine/orm": "~2.2,>=2.2.3,<2.5",
+        "doctrine/dbal": "<2.5",
+        "doctrine/doctrine-bundle": "~1.4",
+        "symfony/assetic-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.4",
+        "sensio/distribution-bundle": "~4.0",
+        "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "friendsofsymfony/user-bundle": "~1.3",
+        "kozleek/vokativ-xml" : "dev-master",
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
+        "doctrine/doctrine-migrations-bundle": "^1.0",
+        "knplabs/knp-menu-bundle": "^2.1",
+        "cnerta/breadcrumb-bundle": "^2.1",
+        "liuggio/excelbundle": "^2.0",
+        "dg/ftp-deployment": "^2.4",
+        "lexik/form-filter-bundle": "~4.0",
+        "friendsofsymfony/rest-bundle": "^1.7",
+        "jms/serializer-bundle": "^1.1",
+        "paragonie/random_compat": "~1.4",
+        "sybio/image-workshop": "^2.0",
+        "myclabs/deep-copy": "^1.5"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "~2.3",
+        "behat/behat": "^3.0",
+        "behat/symfony2-extension": "^2.1",
+        "behat/mink": "^1.7",
+        "behat/mink-extension": "^2.2",
+        "behat/mink-browserkit-driver": "^1.3",
+        "behat/mink-goutte-driver": "^1.2",
+        "phpunit/phpunit": "^4.8",
+        "phpmd/phpmd": "^2.3",
+        "sebastian/phpcpd": "^2.0",
+        "phpmetrics/phpmetrics": "^1.10"
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "SymfonyStandard\\Composer::hookRootPackageInstall"
+        ],
+        "post-install-cmd": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-update-cmd": [
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ]
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": {
+            "dev-master": "2.7-dev"
+        }
+    }
+}

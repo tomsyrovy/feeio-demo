@@ -1,0 +1,17 @@
+boolean:
+    yes_or_no:          "ano/ne"
+    yes:                "ano"
+    no:                 "ne"
+
+number:
+    equal:              "je rovno"
+    greater_than:       "je větší než"
+    greater_than_equal: "je rovno nebo větší než"
+    lower_than:         "je menší než"
+    lower_than_equal:   "je rovno nebo menší než"
+
+text:
+    starts:             "začíná na"
+    ends:               "končí na"
+    equals:             "je stejné jako"
+    both:               "obsahuje"

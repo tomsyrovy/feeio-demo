@@ -1,0 +1,35 @@
+<ul class="nav navbar-nav navbar-right navbar-user">
+
+	<li class="app-version">
+		<a title="Přejít na Feeio blog" href="{{ newVersionInfoUrl }}" target="_blank">{{ appVersion }}</a>
+
+		{% if newVersionAlert %}
+			<a title="Přejít na Feeio blog" class="maly-stupartik" href="{{ newVersionInfoUrl }}">
+				<img src="{{ asset('assets/images/maly-stupartik@2x.png') }}" alt="Malý Štupartík" data-toggle="tooltip" data-placement="right" title="Nové vydání!">
+			</a>
+		{% endif %}
+	</li>
+
+	<li>
+		<div class="user-image" style="background-image: url({{ asset(user.image.getWebPath()) }});"></div>
+	</li>
+
+	<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.fullName }} <span class="caret"></span></a>
+		<ul class="dropdown-menu" role="menu">
+			<li><a title="Úprava profilu" href="{{ path('app_profile_edit') }}"><i class="fa fa-fw fa-gear"></i> Můj profil</a></li>
+			<li class="divider"></li>
+			<li><a class="container-toggle" href="#" currentLayout="{{ app.user.currentLayout }}" url="{{ path("ajax_layout_change") }}" data-text-container="Rozšířit okno" data-text-container-fluid="Zúžit okno"><i class="fa fa-fw fa-arrows-alt"></i> <span>{% if app.user.currentLayout == "container" %}Rozšířit okno{% else %}Zúžit okno{% endif %}</span></a></li>
+			<li class="divider"></li>
+			{% if app.session.get('admin') > 0 %}
+				<li><a title="Odhlásit se" href="{{ path('app_admin_logout') }}"><i class="fa fa-fw fa-sign-out"></i> {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+			{% else %}
+				<li><a title="Odhlásit se" href="{{ path('fos_user_security_logout') }}"><i class="fa fa-fw fa-sign-out"></i> {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+			{% endif %}
+			{% if app.session.get('admin') > 0 %}
+				<li class="divider"></li>
+				<li><a title="Administrace aplikace" href="{{ path('app_admin_userswitch', {'user_id': app.session.get('admin')}) }}"><i class="fa fa-fw fa-cubes"></i> Administrace aplikace</a></li>
+			{% endif %}
+		</ul>
+	</li>
+</ul> <!-- .navbar-profile -->

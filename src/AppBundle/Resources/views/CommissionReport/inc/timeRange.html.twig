@@ -1,0 +1,13 @@
+{% if timeWindowDefault %}
+    <div class="alert alert-warning">
+        <p>Nemáte zvolené časové období pro omezení zobrazení reportů.</p>
+        <p>Změnu období můžete provést zde:</p>
+        {{ render(controller('AppBundle:TimeWindow:index')) }}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p>Zobrazujete si reporty v časovém období od <strong>{{ timeWindow.yearmonthFrom.code }}</strong> do <strong>{{ timeWindow.yearmonthTo.code }}</strong>.</p>
+        <p>Změnu období můžete provést zde:</p>
+        {{ render(controller('AppBundle:TimeWindow:index')) }}
+    </div>
+{% endif %}

@@ -1,0 +1,143 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Alokace pro zakázku " ~ commission.data.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail{{ parent() }}{% endblock %}
+
+{#{% form_theme form "bootstrap_3_horizontal_layout.html.twig" %}#}
+
+{% block content %}
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'přehled'} %}
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            {{ form_start(form) }}
+
+            <div class="panel panel-default">
+
+                <div class="table-responsive">
+
+                    <table id="table-contacts" class="table table-hover user-table table-datatable table-au">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="no-orderable"></th>
+                                <th class="filterable">Období</th>
+                                <th class="filterable">Pracovník</th>
+                                <th class="sum">Volné hodiny</th>
+                                <th>Hodiny <sub>plán</sub></th>
+                                <th class="sum">Hodiny <sub>reál</sub></th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for key, au in model['aus'] %}
+
+                                <tr class="table-au-row">
+                                    <td></td>
+                                    <td>{{ au.yearMonth.code }}</td>
+                                    <td>{{ au.userCompany.user.fullname }}</td>
+                                    <td>{{ au.freeHours }}</td>
+                                    {% set k = au.yearMonth.id ~ '_' ~ au.userCompany.id %}
+                                    {% if auT[k] is defined %}
+                                        <td data-default-value="{{ auT[k] }}">{{ form_row(form['aus'][key]['hoursPlan']) }}</td>
+                                    {% else %}
+                                        <td>{{ form_row(form['aus'][key]['hoursPlan']) }}</td>
+                                    {% endif %}
+                                    <td>{{ au.hoursReal|number_format(0) }}</td>
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                        <tfoot>
+
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th class="table-au-hoursPlan"></th>
+                                <th></th>
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+
+                </div> <!-- .table-responsive -->
+
+            </div> <!-- .panel panel-default -->
+
+            <input type="submit" class="btn btn-primary" value="Uložit">
+
+            {% if allocationContainer is not null %}
+                <div class="btn btn-warning btn-xs btn-via-bg">Předvyplnit podle rozpočtu</div>
+            {% endif %}
+
+            {{ form_end(form) }}
+
+            {#{{ form(form) }}#}
+
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+        function sumarize(){
+
+            var sum = 0;
+            $(".table-au-row input").each(function(){
+                sum = sum + parseInt($(this).val());
+            });
+            $(".table-au-hoursPlan").html(sum);
+
+        }
+
+        $(document).ready(function(){
+
+            //Datatable input sums
+            $('.table-au-row input').on("keyup", function(){
+                sumarize();
+            });
+
+            sumarize();
+
+            $('.btn-via-bg').click(function(e){
+                $(".table-au-row").each(function(){
+                    var input = $(this).find('input');
+                    input.val(0);
+
+                    var td = input.closest('td');
+                    var attr = td.attr('data-default-value');
+
+                    // For some browsers, `attr` is undefined; for others,
+                    // `attr` is false.  Check for both.
+                    if (typeof attr !== typeof undefined && attr !== false) {
+                        input.val(attr);
+                    }
+
+                });
+                sumarize();
+            });
+
+
+        });
+
+    </script>
+
+{% endblock %}

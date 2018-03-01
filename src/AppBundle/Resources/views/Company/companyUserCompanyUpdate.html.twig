@@ -1,0 +1,76 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = userCompany.user.fullname ~ " v " ~ company.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-company-user-update {{ parent() }}{% endblock %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+
+
+	<div class="row">
+
+		<a class="btn btn-info" title="Zpět" href="{{ path('app_company_companyusercompanydetail', {'company_id': company.id, 'userCompany_id': userCompany.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+
+		<div class="col-lg-12">
+			<div class="page-header text-center">
+				<h2><i class="fa fa-fw fa-pencil"></i> {{ userCompany.user.fullname }}</h2>
+			</div>
+		</div> <!-- .col-lg-12 -->
+
+		<div class="col-lg-4 col-lg-offset-4">
+
+			<div class="panel panel-default">
+				<div class="panel-body">
+					{{ form_start(form) }}
+
+					{{ form_widget(form) }}
+
+					<div class="text-center">
+						<input type="submit" class="btn-primary btn" value="Uložit">
+					</div> <!-- .text-center -->
+
+					{{ form_end(form) }}
+				</div> <!-- .panel-body -->
+			</div> <!-- .panel -->
+
+		</div> <!-- .col-lg-6 -->
+
+
+	</div> <!-- .row -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+	<script type="text/javascript">
+		$('#appbundle_usercompanytemporality_jobposition').change(function(e){
+
+			e.preventDefault();
+
+			var url = "{{ url('app_jobposition_get') }}";
+			var company_id = {{ company.id }};
+			var jobposition_id = $(this).val();
+
+			$.ajax({
+				method: "POST",
+				url: url,
+				data: {
+					company_id: company_id,
+					jobposition_id: jobposition_id
+				}
+			})
+			.done(function( d ) {
+				if(d.code == 200){
+					$("#appbundle_usercompanytemporality_rateInternal").val(d.entity.internalRate);
+					$("#appbundle_usercompanytemporality_rateExternal").val(d.entity.externalRate);
+				}
+			});
+			return false;
+		});
+	</script>
+
+{% endblock %}

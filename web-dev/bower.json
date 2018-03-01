@@ -1,0 +1,23 @@
+{
+  "name": "Feeio2",
+  "version": "0.0.1",
+  "author": "Jiří Šebek (www.query.cz)",
+  "dependencies": {
+    "jquery": "1.12.0",
+    "css3-mediaqueries-js": "latest",
+    "html5shiv": "latest",
+    "retina.js": "latest",
+    "fastclick": "latest",
+    "fontawesome": "latest",
+    "bootstrap": "latest",
+    "pace": "latest",
+    "DataTables": "latest",
+    "chosen": "latest",
+    "highchartTable": "~1.1.0",
+    "jquery-calx": "2.2.7",
+    "bootstrap-datepicker": "~1.5.1",
+    "jquery-ui": "~1.11.4",
+    "orb": "^1.0.9",
+    "react": "^0.12.2"
+  }
+}

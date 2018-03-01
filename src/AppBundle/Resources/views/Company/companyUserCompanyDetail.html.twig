@@ -1,0 +1,150 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = userCompany.user.fullname ~ " v " ~ company.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-company-user-detail {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<div class="row">
+		<div class="col-lg-12">
+			<a class="btn btn-back btn-sm btn-default" title="Zpět" href="{{ path('app_company_detail', {'company_id': company.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+
+
+
+	<div class="page-header">
+		<div class="row">
+
+			<div class="col-lg-6">
+				<h2><i class="fa fa-fw fa-user"></i> {{ userCompany.user.fullname }}</h2>
+				<span class="label label-default"><i class="fa fa-fw fa-building"></i> {{ company.name }}</span>
+			</div> <!-- .col-lg-6 -->
+
+			<div class="col-lg-6 text-right">
+				<a class="btn btn-header btn-default" title="Upravit uživatele" href="{{ path("app_company_companyusercompanyupdate", {"company_id" : company.id, "userCompany_id" : userCompany.id}) }}"><i class="fa fa-fw fa-pencil"></i> Upravit</a>
+			</div> <!-- .col-lg-6 -->
+
+		</div> <!-- .row -->
+	</div> <!-- .page-header -->
+
+
+
+
+
+	<div class="row">
+		<div class="col-lg-12">
+			<ul class="nav nav-tabs">
+				<li role="presentation" class="active"><a href="{{ path('app_company_companyusercompanydetail', {'company_id': company.id, 'userCompany_id': userCompany.id}) }}">Přehled</a></li>
+				{# <li role="presentation"><a href="#projects" aria-controls="projects" role="tab" data-toggle="tab">Aktivní projekty</a></li>#}
+				<li role="presentation"><a href="{{ path('app_company_companyusercompanytimesheet', {'company_id': company.id, 'userCompany_id': userCompany.id}) }}">Timesheety</a></li>
+			</ul>
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+
+
+
+	<div class="user-info">
+		<div class="panel panel-default panel-nav-tabs">
+			<div class="panel-body wrap-panel">
+
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="overview">
+						<div class="row">
+
+							<div class="col-lg-3 text-center">
+								<div class="user-image" style="background-image: url({{ asset(userCompany.user.image.webPath) }});"></div> <!-- .user-image -->
+
+								{% if userCompany.data.jobposition is not null %}
+									<h5>{{ userCompany.data.jobposition.name }}</h5>
+								{% endif %}
+
+								<h5>{{ userCompany.data.role.name }}</h5>
+
+								<p><a title="Odeslat e-mail" href="mailto:{{ userCompany.user.email }}">{{ userCompany.user.email }}</a></p>
+
+								<small>({{ userCompany.data.status.name }})</small>
+							</div> <!-- .col-lg-4 -->
+
+							<div class="col-lg-3">
+								<h2><small>Interní sazba</small></h2>
+								<h2>{{ userCompany.data.rateInternal }} <small>Kč</small></h2>
+							</div> <!-- .col-lg-3 -->
+
+							<div class="col-lg-3">
+								<h2><small>Počet hodin</small></h2>
+								<h2>{{ userCompany.data.hours }} <small>h</small></h2>
+							</div> <!-- .col-lg-3 -->
+
+						</div> <!-- .row -->
+					</div> <!-- .tab-pane -->
+
+				</div> <!-- .tab-content -->
+
+			</div> <!-- .panel-body -->
+		</div> <!-- .panel panel-default -->
+	</div> <!-- .user-info -->
+
+
+
+
+
+	<div class="history temporaly-hidden">
+		<div class="row">
+
+			<div class="col-lg-12">
+
+				<h3><i class="fa fa-fw fa-history"></i> Historie změn</h3>
+
+
+				    <ul class="timeline">
+
+
+						{% for temporality in userCompany.temporalities %}
+
+
+
+						<li {% if loop.index0 is odd %}class="timeline-inverted"{% endif %}>
+				        	<div class="timeline-badge">
+								<i class="fa fa-pencil"></i>
+							</div>
+
+							<div class="timeline-panel">
+				    			<div class="timeline-heading">
+				        			<h4 class="timeline-title">
+										{{ temporality.from|date("j. n. Y H:i:s") }},
+										{% if temporality.until %}
+											{{ temporality.until|date("j. n. Y H:i:s") }},
+										{% else %}
+												prázdno,
+										{% endif %}
+				        			</h4>
+				            		<!-- <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 11 hours ago via Twitter</small></p> -->
+				            	</div>
+
+								<div class="timeline-body">
+									{{ temporality.hours }} h,
+									{{ temporality.rateInternal }} Kč,
+									{{ temporality.role.name }},
+									{{ temporality.status.name }},
+				            	</div>
+				        	</div>
+				        </li>
+
+
+						{% endfor %}
+				    </ul> <!-- .timeline -->
+
+
+			</div> <!-- .col-lg-12 -->
+
+		</div> <!-- .row -->
+	</div> <!-- .history -->
+
+
+{% endblock %}

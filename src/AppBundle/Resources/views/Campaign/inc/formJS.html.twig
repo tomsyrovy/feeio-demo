@@ -1,0 +1,349 @@
+<script type="text/javascript">
+
+    var isCreating_Sources = {% if app.request.get('_route') == 'app_campaign_create' %}true{% else %}false{% endif %};
+    var isCreating_Managers = {% if app.request.get('_route') == 'app_campaign_create' %}true{% else %}false{% endif %};
+
+    var $form = $('#form');
+    var $selector = $("#contactPersons");
+    var $sourceList = $("#sources-relations");
+    var $jobPositions;
+
+    function dynamicChangeCommissionForm(){
+
+        $.ajax({
+            url : "{{ url('app.sourcelist.get') }}",
+            type: "POST",
+            data : {
+                client_id: {{ client.id }}
+            },
+            success: function(obj) {
+
+                $jobPositions = obj.jobPositions;
+                generateJobPositions();
+
+            }
+        });
+
+        if(!isCreating_Sources){
+            $('.btn-via-client').hide();
+        }else{
+            $('.btn-via-client').show();
+        }
+
+    }
+
+    function generateExternalSources(){
+
+        $jobPositions.forEach(function(jobPosition){
+
+            var key = jobPosition.id;
+
+            addSource();
+
+            var $s = $("#sources-relations .row-source:last select:first");
+
+            $s.val(key);
+            setRates($s);
+
+        });
+
+    }
+
+    function addCommissionUserRelation(){
+
+        var collectionHolder = $selector;
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+        return false;
+
+    }
+
+    function removeCommissionUserRelation(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+        return false;
+
+    }
+
+    function addSource(){
+
+
+        var collectionHolder = $("#sources-relations");
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+        setRates($('.row-source:last .jobPosition select'));
+
+        return false;
+
+    }
+
+    function removeSource(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+        return false;
+
+    }
+
+    function addManager(){
+
+
+        var collectionHolder = $("#campaignManagers");
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+//        setRates($('.row-source:last .jobPosition select'));
+
+        return false;
+
+    }
+
+    function removeManager(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+        return false;
+
+    }
+
+    function generateJobPositions(){
+
+        var html = '';
+        console.log($jobPositions);
+        $jobPositions.forEach(function(jobPosition){
+            console.log(jobPosition);
+
+            var key = jobPosition.id;
+            var value = jobPosition.name;
+
+            html = html + '<option value="' + key + '">' + value + '</option>';
+        });
+
+        var $selector = $sourceList;
+
+        var $prototype = $selector.attr('data-prototype');
+
+        var re = /(.*?)(<select.*?id="appbundle_client_sourceList_sources_source__name___jobPosition".*?>)(.*?)(<\/select>)(.*)/;
+        var str = $prototype;
+        var subst = '$1$2' + html + '$4$5';
+
+        var result = str.replace(re, subst);
+
+        $selector.attr('data-prototype', result);
+
+        if(isCreating_Sources){
+            //Resetování
+            $selector.find('.row-source').remove();
+        }
+
+        isCreating_Sources = true;
+//        //Resetování
+//        $selector.find('.row-source').remove();
+//
+//        //TODO - to co už je...
+
+    }
+
+    function setRates(input){
+        var $select = input;
+        var id = $select.val();
+        var $row = $select.closest('.row-source');
+        $jobPositions.forEach(function(jobPosition){
+            var key = jobPosition.id;
+            if(key == id){
+                $row.find('.rateExternal input').val(jobPosition.rateExternal);
+                $row.find('.rateInternal input').val(jobPosition.rateInternal);
+            }
+        });
+    }
+
+    {#function generateManagersFromCompany(){#}
+
+        {#$.ajax({#}
+            {#url : "{{ url('app.campaignManagers.get') }}",#}
+            {#type: "POST",#}
+            {#data : {#}
+                {#company_id: {{ client.company.id }}#}
+            {#},#}
+            {#success: function(obj) {#}
+
+                {#var $managers = obj.managers;#}
+{#//                generateManagers($managers);#}
+
+            {#}#}
+        {#});#}
+
+        {##}
+
+    {#}#}
+
+    function generateManagersFromCompanyGroup(){
+
+        $.ajax({
+            url : "{{ url('app.campaignManagers.get') }}",
+            type: "POST",
+            data : {
+                companygroup_id: $('#appbundle_campaign_companyGroup').val()
+            },
+            success: function(obj) {
+
+                var $managers = obj.managers;
+//                generateManagers($managers);
+                showGeneratedManagers($managers);
+
+                $(".btn-add-manager").show();
+
+            }
+        });
+
+    }
+
+    function showGeneratedManagers($managers){
+
+        $managers.forEach(function(manager){
+            addManager();
+
+            var key = manager.id;
+            var owner = manager.owner;
+            var jobManager = manager.jobManager;
+            var jobConsultant = manager.jobConsultant;
+
+            $("#campaignManagers .row-manager:last select:first").val(key);
+            $("#campaignManagers .row-manager:last input[type='checkbox']:eq(0)").prop('checked', owner);
+            $("#campaignManagers .row-manager:last input[type='checkbox']:eq(1)").prop('checked', jobManager);
+            $("#campaignManagers .row-manager:last input[type='checkbox']:eq(2)").prop('checked', jobConsultant);
+        });
+
+    }
+
+    function generateManagers($managers){
+
+
+        var html = '';
+        $managers.forEach(function(manager){
+
+            var key = manager.id;
+            var value = manager.fullname;
+
+            html = html + '<option value="' + key + '">' + value + '</option>';
+        });
+
+        var $selector = $('#campaignManagers');
+
+        var $prototype = $selector.attr('data-prototype');
+
+        var re = /(.*?)(<select.*?id="appbundle_campaign_campaignManagers_campaignManager__name___userCompany".*?>)(.*?)(<\/select>)(.*)/;
+        var str = $prototype;
+        var subst = '$1$2' + html + '$4$5';
+
+        var result = str.replace(re, subst);
+
+        $selector.attr('data-prototype', result);
+
+        if(isCreating_Managers){
+            //Resetování
+            $selector.find('.row-manager').remove();
+        }else{
+
+        }
+
+        isCreating_Managers = true;
+
+//        //Resetování
+//        $selector.find('.row-manager').remove();
+//
+//        //TODO - to co už je...
+
+    }
+
+    $(document).ready(function() {
+
+        dynamicChangeCommissionForm();
+
+//        generateManagersFromCompany();
+
+        $('#sources-relations').on('change', '.row-source select', function() {
+            setRates($(this));
+        });
+
+        $('#form').on('click', '.btn-via-cg', function(e) {
+
+            e.preventDefault();
+            generateManagersFromCompanyGroup();
+            $(".btn-add-manager").hide();
+            $(".btn-via-cg").hide();
+            return false;
+
+        });
+
+        $('#form').on('click', '.btn-via-client', function(e) {
+
+            e.preventDefault();
+            generateExternalSources();
+            $(".btn-via-client").hide();
+            return false;
+
+        });
+
+        $form.find(".btn-add").click(function(e) {
+
+            e.preventDefault();
+            addCommissionUserRelation();
+
+        });
+
+        $form.on("click", ".btn-remove", function(e){
+
+            e.preventDefault();
+            removeCommissionUserRelation(this);
+
+        });
+
+        $form.find(".btn-add-source").click(function(e) {
+
+            e.preventDefault();
+            addSource();
+
+        });
+
+        $form.on("click", ".btn-remove-source", function(e){
+
+            e.preventDefault();
+            removeSource(this);
+
+        });
+
+        $form.find(".btn-add-manager").click(function(e) {
+
+            e.preventDefault();
+            addManager();
+
+        });
+
+        $form.on("click", ".btn-remove-manager", function(e){
+
+            e.preventDefault();
+            removeManager(this);
+
+        });
+
+
+    });
+
+
+</script>

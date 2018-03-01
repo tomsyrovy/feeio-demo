@@ -1,0 +1,204 @@
+AppBundle\Entity\Company:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název společnosti nesmí být prázdný."
+
+AppBundle\Entity\Cost:
+    properties:
+        title:
+            - NotBlank:
+                message: "Název nákladu nesmí být prázdný."
+                groups: [Default]
+
+AppBundle\Form\Model\CompanyGroupFormModel:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název skupiny nesmí být prázdný."
+
+AppBundle\Entity\Contact:
+    properties:
+        title:
+            - NotBlank:
+                message: "Název kontaktu nesmí být prázdný."
+
+AppBundle\Entity\Role:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název role nesmí být prázdný."
+
+AppBundle\Entity\Commission:
+    properties:
+        nameOwn:
+            - NotBlank:
+                message: "Název zakázky nesmí být prázdný."
+        startDate:
+            - NotBlank:
+                message: "Zahájení jobu nesmí být prázdné."
+
+AppBundle\Entity\SubcommissionTemporality:
+    properties:
+        feeFixPlan:
+            - NotBlank:
+                message: "Plánované fixní fee nesmí být prázdné."
+        feeFixReal:
+            - NotBlank:
+                message: "Reálné fixní fee nesmí být prázdné."
+        feeSuccessPlan:
+            - NotBlank:
+                message: "Plánované success fee nesmí být prázdné."
+        feeSuccessReal:
+            - NotBlank:
+                message: "Reálné success fee nesmí být prázdné."
+        hoursPlan:
+            - NotBlank:
+                message: "Plánované hodiny nesmí být prázdné."
+
+AppBundle\Entity\SubcommissionTeamUserCompany:
+    properties:
+        rateExternal:
+            - NotBlank:
+                message: "Externí sazba nesmí být prázdná."
+        rateInternal:
+            - NotBlank:
+                message: "Interní sazba nesmí být prázdná."
+        hours:
+            - NotBlank:
+                message: "Hodiny nesmí být prázdné."
+
+AppBundle\Entity\UserCompanyTemporality:
+    properties:
+        rateInternal:
+            - NotBlank:
+                message: "Interní sazba nesmí být prázdná."
+            - Type:
+                type: numeric
+                message: "Interní sazba musí být číslo."
+        hours:
+            - NotBlank:
+                message: "Časová kapacita nesmí být prázdná."
+            - Type:
+                type: integer
+                message: "Časová kapacita musí být číslo."
+
+AppBundle\Entity\Invitation:
+    properties:
+        email:
+            - NotBlank:
+                message: "E-mail nesmí být prázdný."
+            - Email:
+                message: "E-mail nemá správný formát."
+                checkMX: true
+        rateInternal:
+            - NotBlank:
+                message: "Interní sazba nesmí být prázdná."
+            - Type:
+                type: numeric
+                message: "Interní sazba musí být číslo."
+        hours:
+            - NotBlank:
+                message: "Časová kapacita nesmí být prázdná."
+            - Type:
+                type: integer
+                message: "Časová kapacita musí být číslo."
+
+AppBundle\Entity\Budget:
+    properties:
+        title:
+            - NotBlank:
+                message: "Název rozpočtu nesmí být prázdný."
+        budgetItems:
+            - Valid: ~
+
+AppBundle\Entity\BudgetItem:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název položky nesmí být prázdný."
+        pricePlan:
+            - NotBlank:
+                message: "Plánovaná částka nesmí být prázdná."
+            - Type:
+                type: numeric
+                message: "Plánovaná částka musí být číslo."
+
+AppBundle\Entity\Timesheet:
+    properties:
+        description:
+            - NotBlank:
+                message: "Popis nesmí být prázdný."
+        duration:
+            - NotBlank:
+                message: "Strávený čas nesmí být prázdný."
+            - Type:
+                type: numeric
+                message: "Strávený čas musí být číslo."
+
+AppBundle\Entity\Activity:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název aktivity nesmí být prázdný."
+
+AppBundle\Entity\JobPosition:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název pracovní pozice nesmí být prázdný."
+
+AppBundle\Entity\Client:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název klienta nesmí být prázdný."
+        code:
+            - NotBlank:
+                message: "Kód klienta nesmí být prázdný."
+            - Length:
+                min: 4
+                max: 4
+                exactMessage: "Kód klienta musí mít 4 znaky."
+            - Regex:
+                pattern: '/^[a-zA-Z0-9]*$/'
+                message: "Kód klienta musí obsahovat pouze písmena a čísla."
+        contactPersonList:
+            - Valid: ~
+
+AppBundle\Entity\ContactPersonList:
+    properties:
+        contactPersons:
+            - Valid: ~
+
+AppBundle\Entity\ContactPerson:
+    properties:
+        lastName:
+            - NotBlank:
+                message: "Příjmení kontaktní osoby nesmí být prázdné."
+
+AppBundle\Entity\SourceList:
+    properties:
+        sources:
+            - Valid: ~
+
+AppBundle\Entity\Campaign:
+    properties:
+        nameOwn:
+            - NotBlank:
+                message: "Název kampaně nesmí být prázdný."
+        contactPersonList:
+            - Valid: ~
+
+AppBundle\Entity\AllocationContainer:
+    properties:
+        allocationContainerLists:
+            - Valid: ~
+
+AppBundle\Entity\AllocationContainerList:
+    properties:
+        name:
+            - NotBlank:
+                message: "Název seznamu položek nesmí být prázdný."
+        allocationContainerListItems:
+            - Valid: ~

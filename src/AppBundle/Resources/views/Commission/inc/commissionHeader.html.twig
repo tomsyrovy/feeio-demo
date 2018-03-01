@@ -1,0 +1,97 @@
+<div class="row">
+	<div class="col-lg-12">
+		<a class="btn btn-back btn-sm btn-default" title="Zpět" href="{{ path('app_campaign_detail', {'campaign_id' : commission.data.campaign.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+	</div> <!-- .col-lg-12 -->
+</div> <!-- .row -->
+
+<div class="page-header">
+	<div class="row">
+		<div class="col-lg-10">
+			<h2><i class="fa fa-fw fa-briefcase"></i> {{ commission.data.campaign.client.name }} <small>klient</small> <span style="color: #888;">/</span> {{ commission.data.campaign.nameOwn }} ({{ commission.data.campaign.name }}) <small>kampaň</small> <span style="color: #888;">/</span> <strong>{{ commission.data.nameOwn }} ({{ commission.data.name }})</strong> <small>zakázka</small></h2>
+			<p>{{ commission.data.description }}</p>
+			<span class="label label-primary"><i class="fa fa-fw fa-briefcase"></i> {{ commission.data.campaign.client.contact.title }}</span>
+			<span class="label label-primary"><i class="fa fa-fw fa-group"></i> {{ commission.data.campaign.companyGroup.name }}</span>
+			<span class="label label-primary">od {{ commission.data.startDate.code }}</span>
+			{% if commission.data.endDate is not null %}
+				<span class="label label-primary">do {{ commission.data.endDate.code }}</span>
+			{% endif %}
+			<span class="label label-primary">{{ commission.data.status }}</span>
+			{% if commission.data.billable %}
+				<span class="label label-primary">zúčtovatelný</span>
+			{% else %}
+				<span class="label label-primary">nezúčtovatelný</span>
+			{% endif %}
+			{#<br><br>#}
+			{#<div class="row">#}
+				{#<div class="col-lg-2 small">#}
+					{#Smluvní podmínky:#}
+				{#</div>#}
+				{#<div class="col-lg-10">#}
+					{#{% for source in commission.data.campaign.sourceList.sources %}#}
+						{#<div class="label label-info">{{ source.jobPosition.name }} ({{ source.rateExternal }}&nbsp;Kč)</div>#}
+					{#{% endfor %}#}
+				{#</div>#}
+			{#</div>#}
+			{#<div class="row">#}
+				{#<div class="col-lg-2 small">#}
+					{#Vlastníci kampaně:#}
+				{#</div>#}
+				{#<div class="col-lg-10">#}
+					{#{% for manager in commission.data.campaign.campaignManagers if manager.owner %}#}
+						{#<div class="label label-info">{{ manager.userCompany.user.fullName }}</div>#}
+					{#{% endfor %}#}
+				{#</div>#}
+			{#</div>#}
+			{#<div class="row">#}
+				{#<div class="col-lg-2 small">#}
+					{#Manažeři zakázek:#}
+				{#</div>#}
+				{#<div class="col-lg-10">#}
+					{#{% for manager in commission.data.campaign.campaignManagers if manager.jobManager %}#}
+						{#<div class="label label-info">{{ manager.userCompany.user.fullName }}</div>#}
+					{#{% endfor %}#}
+				{#</div>#}
+			{#</div>#}
+			{#<div class="row">#}
+				{#<div class="col-lg-2 small">#}
+					{#Pracovníci zakázek:#}
+				{#</div>#}
+				{#<div class="col-lg-10">#}
+					{#{% for manager in commission.data.campaign.campaignManagers if manager.jobConsultant %}#}
+						{#<div class="label label-info">{{ manager.userCompany.user.fullName }} ({{  manager.userCompany.data.rateInternal }}&nbsp;Kč)</div>#}
+					{#{% endfor %}#}
+				{#</div>#}
+			{#</div>#}
+		</div> <!-- .col-lg-6 -->
+
+		<div class="col-lg-2 text-right">
+			<a class="btn btn-header btn-default" title="Upravit" href="{{ path('app_commission_update', {'commission_id': commission.data.id}) }}"><i class="fa fa-fw fa-pencil"></i> Upravit</a>
+
+			{#<div class="commission-date">#}
+				{#{{ render(controller('AppBundle:TimeWindow:index')) }}#}
+			{#</div>#}
+
+		</div> <!-- .col-lg-4 -->
+	</div> <!-- .row -->
+</div> <!-- .page-header -->
+
+<div class="row">
+	<div class="col-lg-12">
+		<ul class="nav nav-pills">
+			<li class="nav-item{% if get_controller_name() == "commission" and get_action_name() == 'dashboard' %} active{% endif %}">
+				<a class="nav-link" href="#"><i class="fa fa-fw fa-search"></i> Přehled</a>
+			</li>
+			<li class="nav-item{% if get_controller_name() == "commission" and get_action_name() == 'detail' %} active{% endif %}">
+				<a class="nav-link" href="{{ path('app_commission_detail', {'commission_id': commission.data.id}) }}"><i class="fa fa-bars"></i> Rozpočty</a>
+			</li>
+			<li class="nav-item{% if get_controller_name() == "allocation" and get_action_name() == 'list' %} active{% endif %}">
+				<a class="nav-link" href="{{ path('app_allocation_list', {'commission_id': commission.data.id}) }}"><i class="fa fa-fw fa-users"></i> Alokace</a>
+			</li>
+			<li class="nav-item{% if get_controller_name() == "invoice" and get_action_name() == 'list' %} active{% endif %}">
+				<a class="nav-link" href="{{ path('app_invoice_list', {'commission_id': commission.data.id}) }}"><i class="fa fa-fw fa-money"></i> Fakturace</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<br>

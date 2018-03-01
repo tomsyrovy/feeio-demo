@@ -1,0 +1,73 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Seznam všech uživatelů" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-user-list {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2><i class="fa fa-fw fa-users"></i> {{ title }}</h2>
+                </div> <!-- .col-lg-6 -->
+
+                {#<div class="col-lg-6 text-right">#}
+                    {#<a class="btn btn-header btn-warning" title="Založit novou společnost" href="{{ path('app_company_create') }}"><i class="fa fa-fw fa-plus"></i> Založit společnost</a>#}
+                {#</div> <!-- .col-lg-6 -->#}
+            </div> <!-- .row -->
+        </div> <!-- .page-header -->
+
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th></th>
+                        <th>Uživatel</th>
+                        <th>Akce</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+
+                        <tr>
+
+                            <td>
+                                <img class="user-image" src="{{ asset(user.image.webPath) }}" alt="{{ user.fullName }}">
+                            </td>
+                            <td>
+                                {{ user.lastname }} {{ user.firstname }}
+                            </td>
+                            <td>
+                                <a title="Přepnout uživatele" class="btn btn-sm btn-default" href="{{ path('app_admin_userswitch', {'user_id': user.id}) }}">
+                                    <i class="fa fa-refresh"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-12 text-right small">
+                Celkem uživatelů: <span class="badge">{{ users|length }}</span>
+            </div> <!-- .col-lg-6 -->
+
+        </div> <!-- .row -->
+
+
+{% endblock %}

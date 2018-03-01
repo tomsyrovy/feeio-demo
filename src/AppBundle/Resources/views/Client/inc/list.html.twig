@@ -1,0 +1,91 @@
+<table class="table table-hover user-table table-datatable">
+    <thead>
+        <tr>
+            <th class="text-center filterable no-orderable filterable-default" datatable-filterable-default="otevřený">
+
+            </th>
+            <th class="filterable">
+                Název
+            </th>
+            <th class="filterable">
+                Kód
+            </th>
+            <th class="filterable">
+                Adresář
+            </th>
+
+            {% include '@App/include/sumarizations/thead.html.twig' %}
+
+            <th class="text-right no-orderable">
+                <!-- Akce -->
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for client in clients %}
+
+        <tr class="contact-row">
+            <td class="text-center">
+                {% if client.data.closed %}
+                    <i class="fa fa-fw fa-times-circle"></i><span class="hidden">uzavřený</span>
+                {% else %}
+                    <i class="fa fa-fw fa-check-circle"></i><span class="hidden">otevřený</span>
+                {% endif %}
+            </td>
+            <td>
+                <a title="Detail klienta" href="{{ path('app_client_detail', {'client_id': client.data.id}) }}">
+                    {{ client.data.name }}
+                </a>
+
+            </td>
+            <td>
+                <a title="Detail klienta" href="{{ path('app_client_detail', {'client_id': client.data.id}) }}">
+                    {{ client.data.code }}
+                </a>
+            </td>
+            <td>
+                <a title="Detail kontaktu" href="{{ path('app_contact_detail', {'contact_id': client.data.contact.id}) }}">
+                    {{ client.data.contact.title }}
+                </a>
+            </td>
+
+            {% include '@App/include/sumarizations/tbody.html.twig' with {'row' : client.data} %}
+
+            <td class="contact-action text-right">
+
+                <a title="Detail klienta" class="btn btn-sm btn-default" href="{{ path('app_client_detail', {'client_id': client.data.id}) }}">
+                    <i class="fa fa-fw fa-search"></i>
+                </a>
+
+                <a title="Odstranit" class="btn btn-sm btn-default" href="{{ path('app_client_delete', {'client_id': client.data.id}) }}">
+                    <i class="fa fa-fw fa-trash"></i>
+                </a>
+
+                {#<a title="Upravit klienta" class="btn btn-sm btn-default" href="{{ path('app_client_update', {'client_id': client.data.id}) }}">#}
+                    {#<i class="fa fa-fw fa-pencil"></i>#}
+                {#</a>#}
+
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+
+            {% include '@App/include/sumarizations/tfoot.html.twig' %}
+
+            <th class="text-right">
+                <!-- Akce -->
+            </th>
+        </tr>
+    </tfoot>
+
+</table>

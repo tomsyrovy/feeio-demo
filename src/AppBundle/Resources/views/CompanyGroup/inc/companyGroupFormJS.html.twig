@@ -1,0 +1,54 @@
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        //Po načtení nastav jednotlivé lidi do jednotlivých typů pozic dle skrytého input pole
+        var $members = $('#appbundle_companygroupmodel_members').val();
+        if($members.length > 2){
+
+            var types = $members.split(";");
+
+            for(var i = 0; i < types.length; i++){
+
+                if(types[i].length > 0){
+
+                    var items = types[i].split(":");
+
+                    var type = items[0];
+                    var ids = items[1].replace(/userCompany\[\]=/g, '').split('&');
+
+                    for(var j = 0; j < ids.length; j++){
+
+                        $("#userCompany_" + ids[j]).appendTo(".membership-type-" + type);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        // Oblíbené aktivity - řazení - sortable (jQueryUI)
+        $( ".sortable" ).sortable({
+            // placeholder: "sortable-item-placeholder",
+            connectWith: ".people-group"
+        }).disableSelection();
+
+        // Uložení oblíbených aktivit
+        $(".btn-companyGroupSave").click(function(){
+            var dataString = "";
+            $('.people-group-type').each(function(e){
+                var d = $(this).sortable('serialize');
+                dataString = dataString + $(this).attr('id') + ":" + d + ";";
+            });
+
+            $('#appbundle_companygroupmodel_members').val(dataString);
+
+            $(this).closest('form').submit();
+
+        });
+
+    });
+
+</script>

@@ -1,0 +1,61 @@
+<script type="text/javascript">
+
+    var $commission = $('#appbundle_cost_commission');
+    var $form = $('#costForm');
+
+    function dynamicChangeForm(){
+
+        $(".btn[type='submit']").attr('disabled', 'disabled');
+        $("#appbundle_cost_supplier").empty();
+        $("#appbundle_cost_supplier").attr('disabled', 'disabled');
+
+
+        // Simulate form data, but only include the selected company value.
+
+        var data = {};
+        data[$commission.attr('name')] = $commission.val();
+
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url : $form.attr('action'),
+            type: $form.attr('method'),
+            data : data,
+            success: function(html) {
+
+                // Replace current supplier field ...
+                $("#appbundle_cost_supplier").replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        $(html).find('#appbundle_cost_supplier')
+                );
+                // Position field now displays the appropriate suppliers.
+
+                $("#appbundle_cost_supplier").removeAttr('disabled');
+
+                enableSubmitBtn();
+
+            }
+        });
+
+    }
+
+    function enableSubmitBtn(){
+
+        $(".btn[type='submit']").removeAttr('disabled');
+
+    }
+
+
+    $(document).ready(function() {
+
+        // When company gets selected ...
+        $commission.change(function() {
+            dynamicChangeForm();
+        });
+
+        //Or when form is loaded
+        dynamicChangeForm();
+
+    });
+
+
+</script>

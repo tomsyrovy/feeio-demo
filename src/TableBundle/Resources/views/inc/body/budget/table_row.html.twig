@@ -1,0 +1,28 @@
+<td class="text-right" data-cell="A{{ loop.index }}">
+    {{ budget.title }}
+</td>
+<td class="text-right" data-cell="B{{ loop.index }}">
+    {{ budget.version }}
+</td>
+<td class="text-right" data-cell="C{{ loop.index }}">
+    {{ budget.priceSumPlan }}
+</td>
+<td class="text-right" data-cell="D{{ loop.index }}">
+    {{ budget.priceSumReal }}
+</td>
+<td class="text-right" data-cell="E{{ loop.index }}">
+    <a title="Detail uživatele" href="{{ path("app_company_companyusercompanydetail", {"company_id" : budget.author.company.id, "userCompany_id" : budget.author.id}) }}">
+        <img class="user-image" src="{{ asset(budget.author.user.image.webPath) }}" alt="{{ budget.author.user.fullName }}"> {{ budget.author.fullname }}
+    </a>
+</td>
+<td class="text-right" data-cell="F{{ loop.index }}">
+    {{ budget.created|date('j. n. Y H:i') }}
+</td>
+
+{% set index = loop.index %}
+
+{% for column in tableData.userColumns %}
+
+    <td class="text-right" data-formula="{{ column.formula|replaceCalcx(index) }}"></td>
+
+{% endfor %}

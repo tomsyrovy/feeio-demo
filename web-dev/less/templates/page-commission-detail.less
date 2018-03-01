@@ -1,0 +1,50 @@
+/**
+ * Commision detail page
+ */
+
+
+.page-commission-detail {
+    .nav-tabs {
+        margin-bottom: 30px;
+		// border-bottom: 0;
+
+        > li {
+            margin-bottom: -2px;
+
+            &.active {
+                &> a {
+                    border-bottom-color: @grey-light;
+                }
+            }
+        }
+
+        a {
+            background: @grey-light;
+        }
+    }
+
+	.commission-image {
+		margin-top: -8px;
+		margin-right: 10px;
+	}
+
+    .panel {
+        h4 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: @purple-lighter;
+        }
+    }
+
+    .commission-date {
+        margin-top: 10px;
+    }
+
+}
+
+//Provizorní řešení - na seznamu nákladů nesmí být vidět time-window
+.page-cost-list {
+    .commission-date {
+        display: none;
+    }
+}

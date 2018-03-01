@@ -1,0 +1,115 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = commission.name ~ " – náklady " %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail page-cost-list {{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'náklady'} %}
+
+
+
+
+
+    <!-- ========== Commission Nav ========== -->
+    {% include "@App/Commission/inc/commissionNav.html.twig" %}
+
+
+
+
+	<!-- ========== Commission Costs Subnav ========== -->
+    <div class="row ">
+        <div class="col-lg-12 text-right">
+            {% if canCreateCostBtn %}
+                <a class="btn btn-sub-header btn-warning" title="Vytvořit náklad" href="{{ path('app_cost_create_viaCommission', {'commission_id' : commission.id}) }}">
+                    <i class="fa fa-fw fa-plus"></i> Nový náklad
+                </a>
+            {% endif %}
+
+            <button class="btn btn-sub-header btn-warning" title="Filtrovat zobrazení nákladů" data-toggle="modal" data-target="#cost-filter">
+                <i class="fa fa-fw fa-filter"></i> {% if canResetFilterForm %}Upravit filtr{% else %}Filtrovat {% endif %}
+            </button>
+
+            {% if canResetFilterForm %}
+                <a href="{{ path('app_cost_list', {'commission_id' : commission.id}) }}" class="btn btn-sm btn-danger"><i class="fa fa-fw fa-times"></i> Zrušit filtr</a>
+            {% endif %}
+        </div> <!-- .col-lg-6 -->
+    </div> <!-- .row -->
+
+
+
+
+
+
+    {% include "@App/Cost/inc/costFilterForm.html.twig" %}
+
+    {% if costs|length == 0 %}
+
+        <div class="alert alert-warning" role="alert">
+            Není zde žádný náklad, nebo nemáte právo zobrazovat náklady, nebo žádný náklad nevyhovuje výsledkům filtrovacího formuláře.
+        </div> <!-- .alert -->
+
+    {% else %}
+
+        <!-- ========== Subcommissions table ========== -->
+
+        {% include 'TableBundle:inc:table_highchart.html.twig' %}
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+
+                    {% include 'TableBundle:inc:table_preheader.html.twig' with { 'tableCode' : 'table-costsofcommission' } %}
+
+                    <div class="table-responsive">
+                        <table class="table table-hover timesheetlist-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+                            <thead>
+	                            <tr>
+	                                {% include 'TableBundle:inc:table_header.html.twig' with { 'tableData' : tableData } %}
+
+	                                <th data-graph-skip="1">
+	                                    <!-- Akce -->
+	                                </th>
+	                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for cost in costs %}
+
+                                <tr class="cost-item-row">
+
+                                    {% include '@Table/inc/body/cost/table_row.html.twig' with { 'tableData' : tableData, 'row' : cost } %}
+
+                                    <td class="cost-item-action">
+                                        <a title="Editovat záznam" class="btn btn-sm btn-default" href="{{ path('app_cost_update', {'commission_id' : commission.id, 'cost_id' : cost.id}) }}">
+                                            <i class="fa fa-fw fa-pencil"></i>
+                                        </a>
+
+                                        <a title="Odstranit záznam" class="btn btn-sm btn-default" href="{{ path('app_cost_delete', {'commission_id' : commission.id, 'cost_id' : cost.id}) }}">
+                                            <i class="fa fa-fw fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div> <!-- .table-responsive -->
+
+                </div> <!-- .panel panel-default -->
+
+            </div> <!-- .col-lg-12 -->
+        </div> <!-- .row -->
+
+    {% endif %}
+
+
+{% endblock %}

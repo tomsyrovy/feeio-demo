@@ -1,0 +1,50 @@
+{% extends "::layout-secured-simple.html.twig" %}
+{% set title = "Úprava rozpočtu pro " ~ commission.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-budget-update {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <a class="btn btn-info" title="Zpět" href="{{ path('app_budget_list', {'commission_id': commission.id}) }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+
+                <div class="page-header text-center">
+                    <h2><i class="fa fa-fw fa-money"></i> {{ title }}</h2>
+                </div>
+            </div> <!-- .col-lg-12 -->
+
+
+
+
+
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        {% include "@App/Budget/inc/budgetForm.html.twig" with {"form" : form, "submitLabel" : "Uložit"} %}
+
+                    </div> <!-- .panel-body -->
+                </div> <!-- .panel -->
+
+            </div> <!-- .col-lg-6 -->
+
+
+
+
+
+        </div> <!-- .row -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    {% include '@App/Budget/inc/budgetFormJS.html.twig' %}
+
+{% endblock %}

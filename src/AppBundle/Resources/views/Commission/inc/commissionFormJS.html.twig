@@ -1,0 +1,222 @@
+<script type="text/javascript">
+
+    var $company = $('#appbundle_commission_company');
+    var $form = $('#commissionForm');
+    var $selector = $("#relations");
+
+    var clientsLoaded, managersLoaded;
+
+    function dynamicChangeCommissionForm(){
+
+        $(".animation").show();
+        $(".btn[type='submit']").attr('disabled', 'disabled');
+        $("#appbundle_commission_client").attr('disabled', 'disabled');
+
+        clientsLoaded = false;
+        managersLoaded = false;
+
+        // ... retrieve the corresponding form.
+        var $form = $('#commissionForm');
+        // Simulate form data, but only include the selected company value.
+
+        var data = {};
+        data[$company.attr('name')] = $company.val();
+
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url : $form.attr('action'),
+            type: $form.attr('method'),
+            data : data,
+            success: function(html) {
+
+                // Replace current client field ...
+                $('#appbundle_commission_client').replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        $(html).find('#appbundle_commission_client')
+                );
+                // Position field now displays the appropriate clients.
+
+                // Replace current companygroup field ...
+                $('#appbundle_commission_companyGroup').replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        $(html).find('#appbundle_commission_companyGroup')
+                );
+                // Position field now displays the appropriate companyGroups.
+
+                // Set defaultValues for client and companyGroup
+                var $companyDefault = $('#appbundle_commission_company_id');
+                if($companyDefault.length == 1) {
+                    if ($company.val() == $companyDefault.attr('value')) {
+                        $('#appbundle_commission_client').find("option[value='" + $('#appbundle_commission_client_id').attr('value') + "']").attr('selected', 'selected');
+                        $('#appbundle_commission_companyGroup').find("option[value='" + $('#appbundle_commission_companyGroup_id').attr('value') + "']").attr('selected', 'selected');
+                    }
+                }
+
+                $("#appbundle_commission_client").removeAttr('disabled');
+
+                clientsLoaded = true;
+                enableSubmitBtn();
+
+            }
+        });
+
+        $.ajax({
+            url : $form.attr('action') + '_dc',
+            type: $form.attr('method'),
+            data : data,
+            success: function(ucrs) {
+
+                var obj = ucrs;
+
+                //Set commission managers
+                var html = '';
+                for(var i = 0; i < obj.ucrs.length; i++){
+
+                    var id = obj.ucrs[i].id;
+                    var fullname = obj.ucrs[i].fullname;
+
+                    html = html + '<option value="' + id + '">' + fullname + '</option>';
+
+                }
+
+                var $prototype = $selector.attr('data-prototype');
+
+                var re = /(.*?)(<select.*?id="appbundle_commission_commissionUserCompanyRelations_usercompany__name___userCompany".*?>)(.*?)(<\/select>)(.*)/;
+                var str = $prototype;
+                var subst = '$1$2' + html + '$4$5';
+
+                var result = str.replace(re, subst);
+
+                $selector.attr('data-prototype', result);
+
+                //Resetování
+                $("#relations > div").remove();
+                $("#relations > input[type='hidden']").remove();
+
+                //Disabled for admins and observers
+                for(var i = 0; i < obj.admins.length; i++){
+
+                    addCommissionUserRelationAnd(obj.admins[i], obj.roles.admin, true);
+
+                }
+                for(var i = 0; i < obj.observers.length; i++){
+
+                    addCommissionUserRelationAnd(obj.observers[i], obj.roles.observer, true);
+
+                }
+
+                //Add custom managers
+                for(var i = 0; i < obj.customManagers.length; i++){
+
+                    addCommissionUserRelationAnd(obj.customManagers[i].userCompany_id, obj.customManagers[i].type_id, false);
+
+                }
+
+                $(".animation").hide();
+                managersLoaded = true;
+                enableSubmitBtn();
+
+            }
+        });
+    }
+
+    function enableSubmitBtn(){
+        if(clientsLoaded && managersLoaded){
+
+            $(".btn[type='submit']").removeAttr('disabled');
+
+        }
+    }
+
+    function addCommissionUserRelationAnd(value, role_id, disable){
+
+        var collectionHolder = $selector;
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var i = collectionHolder.children().length;
+
+        var form = prototype.replace(/__name__/g, i);
+
+        collectionHolder.append(form);
+
+        var $userCompany = $('[data-content="usercompany' + i + '"]').find('select:eq(0)');
+        var $role = $('[data-content="usercompany' + i + '"]').find('select:eq(1)');
+
+
+        $userCompany.val(value);
+        $role.val(role_id);
+
+        if(disable) {
+
+            $('[data-content="usercompany' + i + '"]').find('select').attr('disabled', 'disabled');
+
+            $('[data-content="usercompany' + i + '"]').find('.btn-remove').remove();
+
+            var name1 = $userCompany.attr('name');
+            var html1 = '<input type="hidden" name="' + name1 + '" value="' + value + '">';
+            $userCompany.attr('name', name1 + '_disabled');
+
+            var name2 = $role.attr('name');
+            var html2 = '<input type="hidden" name="' + name2 + '" value="' + role_id + '">';
+            $role.attr('name', name2 + '_disabled');
+
+
+            collectionHolder.append(html1);
+            collectionHolder.append(html2);
+        }
+
+
+        return false;
+
+    }
+
+    function addCommissionUserRelation(){
+
+        var collectionHolder = $selector;
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+        return false;
+
+    }
+
+    function removeCommissionUserRelation(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+        return false;
+
+    }
+
+    $(document).ready(function() {
+
+        $form.find(".btn-add").click(function(e) {
+
+            e.preventDefault();
+            addCommissionUserRelation();
+
+        });
+
+        $form.on("click", ".btn-remove", function(e){
+
+            e.preventDefault();
+            removeCommissionUserRelation(this);
+
+        });
+
+//        // When company gets selected ...
+//        $company.change(function() {
+//            dynamicChangeCommissionForm();
+//        });
+//
+//        //Or when form is loaded
+//        dynamicChangeCommissionForm();
+
+    });
+
+
+</script>

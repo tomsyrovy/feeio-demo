@@ -1,0 +1,245 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = commission.name ~ " – report " %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail page-commission-report {{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'reporty'} %}
+
+
+
+
+
+    <!-- ========== Commission nav ========== -->
+    {% include "@App/Commission/inc/commissionNav.html.twig" %}
+
+    {% include "@App/CommissionReport/inc/timeRange.html.twig" %}
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Report subzakázek</h4>
+                    <small>Plánované a skutečné finanční, výkonové a týmové ukazatele za jednotlivé subzakázky pro {{ commission.name }}.</small>
+                </div>
+                <div class="panel-body">
+
+                    <!-- ========== Subcommissions table ========== -->
+                    <div class="row data-graph-parent">
+                        <div class="col-lg-12">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="data-graph"></div>
+                                </div> <!-- .panel-body -->
+                            </div> <!-- .panel panel-default -->
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="table-buttons text-right">
+                                <button class="btn btn-sm btn-default btn-data-graph"><i class="fa fa-line-chart"></i></button>
+                                <a class="btn btn-sm btn-default" target="_blank" href='{{ path('table_table_editcode', {'table_code': 'table-subcommissions'}) }}'><i class="fa fa-gears"></i></a>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover subcommission-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            Subzakázka
+                                        </th>
+
+                                        {% for column in table.tableDefaultColumns %}
+
+                                            {% if userDefaultColumns[column.id] is not defined or not userDefaultColumns[column.id].hidden %}
+                                                <th class="text-right" data-cell="{{ column.code }}1" data-visibility="1">
+                                                    {{ column.title|replace({'(plán)' : '<sup>plán</sup>'})|replace({'(reál)' : '<sup>reál</sup>'})|raw }}
+                                                </th>
+                                            {% else %}
+                                                <th class="text-right" data-cell="{{ column.code }}1" data-visibility="0" data-graph-skip="1">
+                                                    {{ column.title|replace({'(plán)' : '<sup>plán</sup>'})|replace({'(reál)' : '<sup>reál</sup>'})|raw }}
+                                                </th>
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                        {% for column in userColumns %}
+
+                                            <th class="text-right">
+                                                {{ column.title }}
+                                            </th>
+
+                                        {% endfor %}
+
+                                        <th data-graph-skip="1">
+                                            <!-- Akce -->
+                                        </th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    {% for subcommission in subcommissions %}
+
+                                        <tr class="subcommission-row">
+                                            <td>
+                                                {{ subcommission.code }}
+                                            </td>
+                                            <td class="text-right" data-cell="A{{ loop.index }}">
+                                                {{ subcommission.data.feeFixPlan }}
+                                            </td>
+                                            <td class="text-right" data-cell="B{{ loop.index }}">
+                                                {{ subcommission.data.feeFixReal }}
+                                            </td>
+                                            <td class="text-right" data-cell="C{{ loop.index }}">
+                                                {{ subcommission.data.feeSuccessPlan }}
+                                            </td>
+                                            <td class="text-right" data-cell="D{{ loop.index }}">
+                                                {{ subcommission.data.feeSuccessReal }}
+                                            </td>
+                                            <td class="text-right" data-cell="E{{ loop.index }}">
+                                                {{ subcommission.data.hoursPlan }}
+                                            </td>
+                                            <td class="text-right" data-cell="F{{ loop.index }}">
+                                                {{ subcommission.data.hoursReal }}
+                                            </td>
+                                            <td class="text-right" data-cell="G{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.rateExternal }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="H{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.rateInternal }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="I{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.totalRateExternalPlan }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="J{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.totalRateExternalReal }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="K{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.totalRateInternalPlan }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="L{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.totalRateInternalReal }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="M{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.hoursPlan }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="N{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.data.hoursReal }}
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-right" data-cell="O{{ loop.index }}">
+                                                {% if subcommission.teamData %}
+                                                    {{ subcommission.teamData.members|length }}
+                                                {% endif %}
+                                            </td>
+
+                                            {% set index = loop.index %}
+
+                                            {% for column in userColumns %}
+
+                                                <td class="text-right" data-formula="{{ column.formula|replaceCalcx(index) }}"></td>
+
+                                            {% endfor %}
+
+                                            <td class="subcommission-item-action">
+                                                {#<a title="Detail" class="btn btn-default btn-sm edit-budget text-info" href=""><i class="fa fa-fw fa-search"></i></a>#}
+                                                <a title="Exportovat do XLS" class="btn btn-default btn-sm" href="{{ path('app_commissionreport_subcommissionexportxls', {'subcommission_id': subcommission.id, 'commission_id': commission.id}) }}"><i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i></a>
+                                            </td> <!-- .subcommission-action -->
+                                        </tr>
+
+                                    {% endfor %}
+
+                                    </tbody>
+
+                                </table>
+
+                            </div> <!-- .table-responsive -->
+
+                        </div>
+
+                    </div>
+
+                </div> <!-- .panel-body -->
+
+            </div> <!-- .panel -->
+
+        </div>
+
+        <div class="col-xs-12">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>Report timesheetů</h4>
+                    <small>Timesheety (odpracované hodiny) celkové, nebo seskupené dle lidí, aktivit a dní pro {{ commission.name }}.</small>
+                </div>
+                <div class="panel-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover timesheetlist-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+                            <thead>
+                            <tr>
+
+                                {% include 'TableBundle:inc:table_header.html.twig' with { 'tableData' : tableData } %}
+
+                                <th data-graph-skip="1">
+                                    <!-- Akce -->
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for row in timesheets %}
+
+                                <tr class="timesheet-item-row">
+
+                                    {% include '@Table/inc/body/timesheetlist/table_row.html.twig' with { 'tableData' : tableData, 'row' : row } %}
+
+                                    <td class="timesheet-item-action">
+                                        <a title="Detail" class="btn btn-default btn-sm edit-budget text-info" href="{{ path('app_commission_timesheetlistyearmonth', {'commission_id' : commission.id, 'year' : row.timesheet.yearmonth.year, 'month' : row.timesheet.yearmonth.month}) }}"><i class="fa fa-fw fa-search"></i></a>
+                                        <a title="Exportovat do XLS" class="btn btn-default btn-sm" href="{{ path('app_commission_timesheetlistyearmonthexportxls', {'commission_id' : commission.id, 'year' : row.timesheet.yearmonth.year, 'month' : row.timesheet.yearmonth.month}) }}"><i class="fa fa-fw fa-file-excel-o" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div> <!-- .table-responsive -->
+
+                </div> <!-- .panel-body -->
+            </div> <!-- .panel -->
+
+        </div>
+
+    </div>
+
+
+{% endblock %}

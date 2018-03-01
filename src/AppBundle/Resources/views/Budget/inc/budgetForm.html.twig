@@ -1,0 +1,165 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% macro widget_prototype(widget) %}
+
+    {% if widget.vars.prototype is defined %}
+
+        {% set form = widget.vars.prototype %}
+        {% set name = widget.vars.prototype.vars.name %}
+        {% set i = '__0__' %}
+
+        {% set itemName = widget.vars.prototype.name %}
+
+        {% set pricePlan = widget.vars.prototype.pricePlan %}
+        {% set yearmonthPlan = widget.vars.prototype.yearmonthPlan %}
+
+        {% set priceReal = widget.vars.prototype.priceReal %}
+        {% set yearmonthReal = widget.vars.prototype.yearmonthReal %}
+
+    {% else %}
+
+        {% set form = widget %}
+        {% set name = widget.vars.full_name %}
+        {% set i = widget.vars.form.vars.name+1 %}
+
+        {% set itemName = widget.name %}
+
+        {% set pricePlan = widget.pricePlan %}
+        {% set yearmonthPlan = widget.yearmonthPlan %}
+
+        {% set priceReal = widget.priceReal %}
+        {% set yearmonthReal = widget.yearmonthReal %}
+
+    {% endif %}
+
+    <div class="row budgetItem" data-content="{{ name }}">
+
+        <div class="col-lg-3">
+            <div class="form-group{% if form.children['name'].vars.errors|length > 0 %} has-error{% endif %}">
+                {{ form_widget(itemName) }}
+                {{ form_errors(itemName) }}
+            </div>
+        </div> <!-- .col-lg-1 -->
+
+        <div class="col-lg-2">
+            <div class="form-group{% if form.children['pricePlan'].vars.errors|length > 0 %} has-error{% endif %}">
+                {{ form_widget(pricePlan, {'attr': {'data-cell' : 'B' ~ i}}) }}
+                {{ form_errors(pricePlan) }}
+            </div>
+        </div> <!-- .col-lg-1 -->
+
+        <div class="col-lg-2">
+            <div class="form-group">
+                {{ form_widget(yearmonthPlan) }}
+            </div>
+        </div> <!-- .col-lg-1 -->
+
+        <div class="col-lg-2">
+            <div class="form-group">
+                {{ form_widget(priceReal, {'attr': {'data-cell' : 'D'  ~ i}}) }}
+            </div>
+        </div> <!-- .col-lg-1 -->
+
+        <div class="col-lg-2">
+            <div class="form-group">
+                {{ form_widget(yearmonthReal) }}
+            </div>
+        </div> <!-- .col-lg-1 -->
+
+        <div class="col-lg-1 text-right">
+            <a href="#" class="btn btn-danger btn-remove" data-related="{{ name }}"><i class="fa fa-trash"></i></a>
+        </div>
+
+    </div> <!-- .row -->
+
+{% endmacro %}
+
+
+{{ form_start(form, {'attr' : {'id' : 'budgetForm'}}) }}
+
+<div class="row">
+    <div class="col-lg-3">
+        {{ form_row(form.title, {'label' : 'Název rozpočtu'}) }}
+    </div> <!-- .col-lg-6 -->
+</div> <!-- .row -->
+
+<div class="row">
+    <div class="col-lg-3">
+        Položky rozpočtu:
+    </div> <!-- .col-lg-6 -->
+</div> <!-- .row -->
+
+<div class="row">
+
+    <div class="col-lg-3">
+        Název:
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+        Cena (plán):
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+        Časové určení (plán):
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+        Cena (reál):
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+        Časové určení (reál):
+    </div> <!-- .col-lg-1 -->
+
+</div> <!-- .row -->
+
+<div id="budgetItems" data-prototype="{{ _self.widget_prototype(form.budgetItems)|escape }}">
+    {% for item in form.budgetItems %}
+
+        {{ _self.widget_prototype(item) }}
+
+    {% endfor %}
+</div>
+
+<div class="row budgetItemsSum">
+
+    <div class="col-lg-3">
+        <a href="#" class="btn btn-default btn-sm btn-add" data-target="budgetItems"><i class="fa fa-plus"></i></a>
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+        <div class="input-group">
+            <input data-cell="B1000" type="text" readonly="readonly" class="form-control"> <span class="input-group-addon"> Kč</span>
+        </div>
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+        <div class="input-group">
+            <input data-cell="D1000" type="text" readonly="readonly" class="form-control"> <span class="input-group-addon"> Kč</span>
+        </div>
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-2">
+
+    </div> <!-- .col-lg-1 -->
+
+    <div class="col-lg-1">
+
+    </div>
+
+</div> <!-- .row -->
+
+<div class="text-center">
+    <input class="btn btn-primary" type="submit" value="{{ submitLabel }}">
+</div>
+
+
+{{ form_widget(form._token) }}
+
+{{ form_end(form, {'render_rest': false}) }}
+
+

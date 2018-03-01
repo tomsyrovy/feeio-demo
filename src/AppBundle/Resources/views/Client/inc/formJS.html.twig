@@ -1,0 +1,230 @@
+<script type="text/javascript">
+
+    var isCreating = {% if app.request.get('_route') == 'app_client_create' %}true{% else %}false{% endif %};
+
+    var $company = $('#appbundle_client_company');
+    var $form = $('#form');
+    var $selector = $("#contactPersons");
+    var $sourceList = $("#sources-relations");
+    var $jobPositions;
+
+    function dynamicChangeCommissionForm(){
+
+        $(".animation").show();
+        $(".btn[type='submit']").attr('disabled', 'disabled');
+        $("#appbundle_client_contact").attr('disabled', 'disabled');
+
+        if(!isCreating){
+            $('.btn-via-company').hide();
+        }else{
+            $('.btn-via-company').show();
+        }
+
+
+        var data = {};
+        data[$company.attr('name')] = $company.val();
+
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url : $form.attr('action'),
+            type: $form.attr('method'),
+            data : data,
+            success: function(html) {
+
+                // Replace current client field ...
+                $('#appbundle_client_contact').replaceWith(
+                    // ... with the returned one from the AJAX response.
+                    $(html).find('#appbundle_client_contact')
+                );
+                // Position field now displays the appropriate clients.
+
+                $("#appbundle_client_contact").removeAttr('disabled');
+
+                $(".btn[type='submit']").removeAttr('disabled');
+                $(".animation").hide();
+
+            }
+        });
+
+        $.ajax({
+            url : "{{ url('app.sourcelist.get') }}",
+            type: "POST",
+            data : {
+                company_id: $company.val()
+            },
+            success: function(obj) {
+
+                $jobPositions = obj.jobPositions;
+                generateJobPositions();
+
+            }
+        });
+
+    }
+
+    function generateExternalSources(){
+
+        $jobPositions.forEach(function(jobPosition){
+
+            var key = jobPosition.id;
+
+            addSource();
+
+            var $s = $("#sources-relations .row-source:last select:first");
+
+            $s.val(key);
+            setRates($s);
+
+        });
+
+    }
+
+    function addCommissionUserRelation(){
+
+        var collectionHolder = $selector;
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+        return false;
+
+    }
+
+    function removeCommissionUserRelation(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+        return false;
+
+    }
+
+    function addSource(){
+
+
+        var collectionHolder = $("#sources-relations");
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+        setRates($('.row-source:last .jobPosition select'));
+
+        return false;
+
+    }
+
+    function removeSource(that){
+
+        var name = $(that).attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+        return false;
+
+    }
+
+    function generateJobPositions(){
+
+        var html = '';
+        console.log($jobPositions);
+        $jobPositions.forEach(function(jobPosition){
+            console.log(jobPosition);
+
+            var key = jobPosition.id;
+            var value = jobPosition.name;
+
+            html = html + '<option value="' + key + '">' + value + '</option>';
+        });
+
+        var $selector = $sourceList;
+
+        var $prototype = $selector.attr('data-prototype');
+
+        var re = /(.*?)(<select.*?id="appbundle_client_sourceList_sources_source__name___jobPosition".*?>)(.*?)(<\/select>)(.*)/;
+        var str = $prototype;
+        var subst = '$1$2' + html + '$4$5';
+
+        var result = str.replace(re, subst);
+
+        $selector.attr('data-prototype', result);
+
+        if(isCreating){
+            //Resetování
+            $selector.find('.row-source').remove();
+        }
+
+        isCreating = true;
+
+    }
+
+    function setRates(input){
+        var $select = input;
+        var id = $select.val();
+        var $row = $select.closest('.row-source');
+        $jobPositions.forEach(function(jobPosition){
+            var key = jobPosition.id;
+            if(key == id){
+                $row.find('.rateExternal input').val(jobPosition.rateExternal);
+                $row.find('.rateInternal input').val(jobPosition.rateInternal);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+
+        $('#sources-relations').on('change', '.row-source select', function() {
+            setRates($(this));
+        });
+
+        // When company gets selected ...
+        $company.change(function() {
+            dynamicChangeCommissionForm();
+        });
+
+        //Or when form is loaded
+        dynamicChangeCommissionForm();
+
+        $form.find(".btn-add").click(function(e) {
+
+            e.preventDefault();
+            addCommissionUserRelation();
+
+        });
+
+        $('#form').on('click', '.btn-via-company', function(e) {
+
+            e.preventDefault();
+            generateExternalSources();
+            $(".btn-via-company").hide();
+            return false;
+
+        });
+
+        $form.on("click", ".btn-remove", function(e){
+
+            e.preventDefault();
+            removeCommissionUserRelation(this);
+
+        });
+
+        $form.find(".btn-add-source").click(function(e) {
+
+            e.preventDefault();
+            addSource();
+
+        });
+
+        $form.on("click", ".btn-remove-source", function(e){
+
+            e.preventDefault();
+            removeSource(this);
+
+        });
+
+    });
+
+
+</script>

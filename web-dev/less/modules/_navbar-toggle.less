@@ -1,0 +1,54 @@
+/**
+ * Navbar mobile toggle
+ */
+
+.navbar-toggle {
+	border: 0;
+}
+
+.navbar-default {
+	.navbar-toggle {
+		.icon-bar {
+			background-color: @green;
+		}
+	}
+}
+
+.navbar-default {
+	.navbar-toggle {
+		&:hover {
+			background-color: transparent;
+
+			.icon-bar {
+				//background-color: @purple-light;
+			}
+		}
+	}
+}
+
+.navbar-toggle .icon-bar:nth-of-type(2) {
+	top: 1px;
+}
+
+.navbar-toggle .icon-bar:nth-of-type(3) {
+	top: 2px;
+}
+
+.navbar-toggle .icon-bar {
+	position: relative;
+	transition: all 250ms ease-in-out;
+}
+
+.navbar-toggle.active .icon-bar:nth-of-type(1) {
+	top: 6px;
+	transform: rotate(45deg);
+}
+
+.navbar-toggle.active .icon-bar:nth-of-type(2) {
+	background-color: transparent;
+}
+
+.navbar-toggle.active .icon-bar:nth-of-type(3) {
+	top: -6px;
+	transform: rotate(-45deg);
+}

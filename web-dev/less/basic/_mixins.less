@@ -1,0 +1,22 @@
+/**
+ * Mixins
+ */
+
+
+// Mixin for smooth transition effect between the element attributes
+.transition(@time) {
+	-webkit-transition: all @time linear;
+	-moz-transition: all @time linear;
+	-ms-transition: all @time linear;
+	-o-transition: all @time linear;
+	transition: all @time linear;
+}
+
+// Mixin for transform animation
+.transform(@size) {
+	-webkit-transform: scale(@size);
+	-moz-transform: scale(@size);
+	-o-transform: scale(@size);
+	-ms-transform: scale(@size);
+	transform: scale(@size);
+}

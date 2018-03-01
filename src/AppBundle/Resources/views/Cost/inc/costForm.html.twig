@@ -1,0 +1,156 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<div class="col-lg-6 col-lg-offset-3">
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            {{ form_start(form, {'attr' : {'id' : 'costForm'}}) }}
+
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading accordion-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <h4 class="panel-title">
+                            Základní informace o nákladu
+                        </h4>
+                    </div>  <!-- .panel-heading -->
+
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form_row(form.commission, {'label' : 'Zakázka'}) }}
+                                </div> <!-- .col-lg-6 -->
+
+                                <div class="col-lg-6">
+                                    {{ form_row(form.supplier, {'label' : 'Dodavatel'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {{ form_row(form.title, {'label' : 'Název'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+                        </div> <!-- .panel-body -->
+                    </div> <!-- .panel-collapse -->
+                </div> <!-- .panel -->
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading accordion-heading" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                        <h4 class="panel-title">
+                            Plánované hodnoty
+                        </h4>
+                    </div>  <!-- .panel-heading -->
+
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+
+                            {{ form_row(form.yearmonthPlan, {'label' : 'Datum uskutečnění'}) }}
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    {{ form_row(form.priceNonVatPlan, {'label' : 'Nákupní cena bez DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+
+                                <div class="col-lg-4">
+                                    {{ form_row(form.vatRatePlan, {'label' : 'Sazba DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    {{ form_row(form.rebillingPriceNonVatPlan, {'label' : 'Prodejní cena bez DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+
+                                <div class="col-lg-4">
+                                    {{ form_row(form.rebillingVatRatePlan, {'label' : 'Sazba DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+
+                        </div> <!-- .panel-body -->
+                    </div> <!-- .panel-collapse -->
+                </div> <!-- .panel -->
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading accordion-heading" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        <h4 class="panel-title">
+                            Reálné hodnody
+                        </h4>
+                    </div>
+
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div class="panel-body">
+
+                            {{ form_row(form.yearmonthReal, {'label' : 'Datum uskutečnění'}) }}
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    {{ form_row(form.priceNonVatReal, {'label' : 'Nákupní cena bez DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+
+                                <div class="col-lg-4">
+                                    {{ form_row(form.vatRateReal, {'label' : 'Sazba DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    {{ form_row(form.rebillingPriceNonVatReal, {'label' : 'Prodejní cena bez DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+
+                                <div class="col-lg-4">
+                                    {{ form_row(form.rebillingVatRateReal, {'label' : 'Sazba DPH'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+
+                        </div> <!-- .panel-body -->
+                    </div> <!-- .panel-collapse -->
+                </div> <!-- .panel -->
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading accordion-heading" role="tab" id="headingFour" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                        <h4 class="panel-title">
+                            Informace pro účetnictví a evidenci
+                        </h4>
+                    </div>
+
+                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form_row(form.receivedDocumentNumber, {'label' : 'Ev. číslo přijatého dokladu'}) }}
+                                </div> <!-- .col-lg-6 -->
+
+                                <div class="col-lg-6">
+                                    {{ form_row(form.issuedDocumentNumber, {'label' : 'Ev. číslo vydaného dokladu'}) }}
+                                </div> <!-- .col-lg-6 -->
+                            </div> <!-- .row -->
+                        </div> <!-- .panel-body -->
+                    </div> <!-- .panel-collapse -->
+                </div> <!-- .panel -->
+
+
+            </div> <!-- .panel-group -->
+
+
+            <div class="text-center">
+                <input class="btn btn-primary" type="submit" value="{{ submitLabel }}">
+            </div>
+
+            {{ form_end(form) }}
+
+
+        </div> <!-- .panel-body -->
+    </div> <!-- .panel -->
+
+</div> <!-- .col-lg-6 -->

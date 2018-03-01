@@ -1,0 +1,12 @@
+{% extends "@App/email/base.html.twig" %}
+
+
+{% block email_content %}
+	<h1 style="font-size: 20px; line-height: 100%; color: #18bc9c; margin: 0 0 20px 0;">Dobrý den, {{ user.getVokativ() }},</h1>
+
+	<p style="margin: 20px 0 20px 0">byl/a jste přidán/a do společnost {{ company.name }}.</p>
+
+	<p style="margin: 20px 0 20px 0">Po přihlášení do Feeia můžete toto pozvání přijmout či zamítnout.</p>
+
+	<p style="margin: 20px 0 20px 0"><strong>Vaše Feeio</strong></p>
+{% endblock %}

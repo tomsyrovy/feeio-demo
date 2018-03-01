@@ -1,0 +1,110 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Nastavení tabulky " ~ table.title %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-table-list {{ parent() }}{% endblock %}
+
+{% form_theme form "bootstrap_3_horizontal_layout.html.twig" %}
+
+{% block content %}
+
+
+	<!-- ========== Page Header ========== -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2><i class="fa fa-gears"></i> {{ title }}</h2>
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+
+
+
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+
+            <div class="panel panel-default">
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-table">
+                        <thead>
+                        <tr>
+                            <th data-cell="A1">
+                                Označení sloupce / vzorec
+                            </th>
+                            <th data-cell="B1">
+                                Název sloupce
+                            </th>
+                            <th>
+                                <!-- Akce -->
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for column in table.tableDefaultColumns %}
+
+                            <tr>
+                                <td data-cell="A{{ loop.index }}">
+                                    {{ column.code }}
+                                </td>
+                                <td data-cell="B{{ loop.index }}">
+                                    {{ column.title }}
+                                </td>
+                                <td class="text-right">
+
+                                    {% if not userDefaultColumns[column.id].hidden is defined or not userDefaultColumns[column.id].hidden %}
+
+                                        <a class="btn btn-default btn-sm" href="{{ path('table_table_toggle', {'column_id': column.id, 'table_id': table.id}) }}"><i class="fa fa-toggle-on"></i></a>
+
+                                    {% else %}
+
+                                        <a class="btn btn-default btn-sm" href="{{ path('table_table_toggle', {'column_id': column.id, 'table_id': table.id}) }}"><i class="fa fa-toggle-off"></i></a>
+
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        {% for column in userColumns %}
+
+                            <tr>
+                                <td data-cell="A{{ loop.index }}">
+                                    {{ column.formula }}
+                                </td>
+                                <td data-cell="B{{ loop.index }}">
+                                    {{ column.title }}
+                                </td>
+                                <td class="text-right">
+                                    <a title="Odstranit" class="btn btn-default btn-sm" href="{{ path('table_table_delete', {'column_id': column.id, 'table_id': table.id}) }}"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        <tr>
+
+                            {{ form_start(form) }}
+                            <td>{{ form_widget(form.formula) }}</td>
+                            <td>{{ form_widget(form.title) }}</td>
+                            <td class="text-right"><button type="submit" class="btn btn-default"><i class="fa fa-save"></i></button></td>
+                            {{ form_end(form) }}
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div> <!-- .table-responsive -->
+
+            </div> <!-- .panel panel-default -->
+
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+
+{% endblock %}

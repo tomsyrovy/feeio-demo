@@ -1,0 +1,101 @@
+<!-- ========== Navbar primary ========== -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-primary">
+	<div class="{{ app.user.currentLayout }}">
+
+
+		<!-- Navbar logo and mobile toggle button -->
+		<div class="navbar-header">
+
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse-1">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+
+			<a title="Přejít na úvodní stranu" class="navbar-brand" href="{{ path('app_default_index') }}">
+				<img src="{{ asset('assets/images/feeio-logo@2x.png') }}" alt="Feeio" data-no-retina>
+			</a> <!-- .navbar-brand -->
+
+		</div> <!-- .navbar-header -->
+
+
+
+
+
+		{#<!-- Navbar Super button -->#}
+		{#<ul class="nav navbar-nav navbar-super-button hidden-xs">#}
+			{#<li class="dropdown">#}
+				{#<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">#}
+					{#<i class="fa fa-lg fa-heart"></i>#}
+				{#</a>#}
+
+				{#<ul class="dropdown-menu" role="menu">#}
+					{#<li class="temporaly-hidden"><a href=""><strong>Oblíbené akce</strong></a></li>#}
+					{#<li><a title="Přidat nový timesheet" href="{{ path('app_timesheet_list') }}"><i class="fa fa-fw fa-clock-o"></i> Přidat timesheet</a></li>#}
+
+					{#<li class="divider temporaly-hidden"></li>#}
+					{#<li class="temporaly-hidden"><a href=""><strong>Oblíbené zakázky</strong></a></li>#}
+
+					{#<li><a title="Přidat novou zakázku" href="{{ path('app_commission_create') }}"><i class="fa fa-fw fa-star"></i> Přidat zakázku</a></li>#}
+					{#<li><a title="Přidat nový kontakt" href="{{ path('app_contact_create') }}"><i class="fa fa-fw fa-briefcase"></i> Přidat kontakt</a></li>#}
+					{#<li><a title="Přidat nový náklad" href="{{ path('app_cost_create') }}"><i class="fa fa-fw fa-money"></i> Přidat náklad</a></li>#}
+
+				{#</ul>#}
+			{#</li>#}
+		{#</ul> <!-- .nav -->#}
+
+
+
+
+
+		<!-- Navbar links -->
+		<div class="collapse navbar-collapse navbar-collapse-1">
+
+			<!-- Navbar left links -->
+			<ul class="nav navbar-nav">
+				<li{% if get_controller_name() == "timesheet" and get_action_name() == 'list'  %} class="navbar-active"{% endif %}><a title="Timesheet" href="{{ path('app_timesheet_list') }}">Timesheet</a></li>
+				<li{% if get_controller_name() == "timesheet" and get_action_name() == 'commissions' %} class="navbar-active"{% endif %}><a title="Moje zakázky" href="{{ path('app_timesheet_commissions') }}">Moje zakázky</a></li>
+				<li{% if (get_controller_name() == "timesheet" and get_action_name() == 'people') or get_controller_name() == "person" %} class="navbar-active"{% endif %}><a title="Moji lidé" href="{{ path('app_timesheet_people') }}">Moji lidé</a></li>
+				{#<li{% if get_controller_name() == "commission" or get_controller_name() == "budget" or get_controller_name() == "subcommission" or get_controller_name() == "cost" or get_controller_name() == "commissionreport" %} class="navbar-active"{% endif %}><a title="Zakázky" href="{{ path('app_commission_list') }}">Zakázky</a></li>#}
+				<li{% if get_controller_name() == "commission" or get_controller_name() == "budget" or get_controller_name() == "subcommission" or get_controller_name() == "cost" or get_controller_name() == "commissionreport" or get_controller_name() == "client" or get_controller_name() == "campaign" %} class="navbar-active"{% endif %}><a title="Klienti" href="{{ path('app_client_list') }}">Klienti</a></li>
+				<li{% if get_controller_name() == "contact" %} class="navbar-active"{% endif %}><a title="Kontakty" href="{{ path('app_contact_list') }}">Adresář</a></li>
+				{#<li{% if get_controller_name() == "report" %} class="navbar-active"{% endif %}><a href="{{ path('app_report_list') }}">Reporty</a></li>#}
+				<li{% if get_controller_name() == "company" or get_controller_name() == "activity" or get_controller_name() == "invitation" %} class="navbar-active"{% endif %}><a title="Společnosti" title="Nastavení společnosti" href="{{ path('app_company_list') }}">Společnosti</a></li>
+			</ul> <!-- .nav -->
+
+
+
+
+
+			<!-- Navbar right profile -->
+			{{ render(controller('AppBundle:Fragment:navbarprofile')) }}
+
+
+		</div><!-- .navbar-collapse-1 -->
+
+
+
+	</div> <!-- .container -->
+</nav> <!-- .navbar-primary -->
+
+
+
+
+
+{% block navbar_secondary %}
+<!-- ========== Navbar secondary ========== -->
+{#<nav class="navbar navbar-default navbar-fixed-top navbar-secondary">
+	<div class="{{ app.user.currentLayout }}">
+
+		<div class="collapse navbar-collapse navbar-collapse-2">
+
+			<ul class="nav navbar-nav">
+				<li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Všechny zakázky</a></li>
+				<li role="presentation"><a href="#projects" aria-controls="projects" role="tab" data-toggle="tab">Moje zakázky</a></li>
+			</ul>
+
+		</div> <!-- .navbar-collapse -->
+
+	</div> <!-- .container -->
+</nav> <!-- .navbar-secondary -->#}
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Detail společnosti " ~ company.name %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-company-detail {{ parent() }}{% endblock %}
+
+{% block content %}
+
+
+	<!-- ========== Page Back Button ========== -->
+	<div class="row">
+		<div class="col-lg-12">
+			<a class="btn btn-back btn-sm btn-default" title="Zpět" href="{{ path('app_company_list') }}"><i class="fa fa-fw fa-caret-left"></i> Zpět</a>
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+
+
+
+	<!-- ========== Page Header ========== -->
+	<div class="page-header">
+		<div class="row">
+
+			<div class="col-lg-5">
+				<h2><i class="fa fa-fw fa-building-o"></i> {{ company.name }} <a title="Upravit název společnosti" href="{{ path('app_company_update', {"company_id" : company.id }) }}"><i class="fa fa-fw small fa-pencil"></i></a></h2>
+			</div> <!-- .col-lg-6 -->
+
+			<div class="col-lg-7 text-right">
+				<a class="btn btn-header btn-default" title="Upravit pracovní pozice" href="{{ path('app_jobposition_list', {'company_id': company.id}) }}"><i class="fa fa-fw fa-tags"></i> Upravit pracovní pozice</a>
+				<a class="btn btn-header btn-default" title="Upravit aktivity" href="{{ path('app_activity_list', {'company_id': company.id}) }}"><i class="fa fa-fw fa-briefcase"></i> Upravit aktivity</a>
+				<a class="btn btn-header btn-default" title="Upravit role" href="{{ path('app_company_companyroles', {'company_id': company.id}) }}"><i class="fa fa-fw fa-user"></i> Upravit role</a>
+				<a class="btn btn-header btn-default" title="Založit skupinu" href="{{ path('app_companygroup_create', {'company_id': company.id}) }}"><i class="fa fa-fw fa-users"></i> Vytvořit skupinu</a>
+				<a class="btn btn-header btn-warning" title="Pozvat uživatele" href="{{ path('app_invitation_create', {'company_id': company.id}) }}"><i class="fa fa-fw fa-user-plus"></i> Pozvat uživatele</a>
+			</div> <!-- .col-lg-6 -->
+
+		</div> <!-- .row -->
+	</div> <!-- .page-header -->
+
+
+
+
+
+	<!-- ========== Users Detail ========== -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+
+				<div class="table-responsive">
+					<table id="table-userCompany" class="table table-hover table-striped user-table">
+						<thead>
+							<tr>
+								<th class="user-image-col">
+									<!-- Obrázek -->
+								</th>
+								<th>Jméno a příjmení</th>
+								<th class="text-right">
+									Pracovní pozice
+								</th>
+								<th class="text-right">
+									Interní sazba
+								</th>
+								<th class="text-right">
+									Časová kapacita
+								</th>
+								<th class="text-right">
+									Role
+								</th>
+								<th class="text-right temporaly-hidden">
+									Stav <!--<br><small>povolený / zakázaný / zablokovaný</small>-->
+								</th>
+								<th class="text-right">
+									<!-- Akce -->
+								</th>
+							</tr>
+						</thead>
+
+						<tbody>
+
+
+							{% for userCompanyRelation in company.userCompanyRelations %}
+
+								<tr class="user-row">
+									<td class="text-center">
+										<a title="Detail uživatele" href="{{ path("app_company_companyusercompanydetail", {"company_id" : company.id, "userCompany_id" : userCompanyRelation.id}) }}">
+											<img class="user-image" src="{{ asset(userCompanyRelation.user.image.webPath) }}" alt="{{ userCompanyRelation.user.fullName }}">
+										</a>
+									</td>
+									<td class="vertical-middle">
+										<a title="Detail uživatele" href="{{ path("app_company_companyusercompanydetail", {"company_id" : company.id, "userCompany_id" : userCompanyRelation.id}) }}">
+											{{ userCompanyRelation.user.fullName }}
+										</a>
+									</td>
+									<td class="vertical-middle text-right">
+										{% if userCompanyRelation.data.jobposition is not null %}
+											{{ userCompanyRelation.data.jobposition.name }}
+										{% endif %}
+									</td>
+									<td class="vertical-middle text-right table-data-format" table-data-raw="{{ userCompanyRelation.data.rateInternal }}" table-data-type="currency" table-data-unit="Kč">
+										{{ userCompanyRelation.data.rateInternal }}
+									</td>
+									<td class="vertical-middle text-right table-data-format" table-data-raw="{{ userCompanyRelation.data.hours }}" table-data-type="integer" table-data-unit="h">
+										{{ userCompanyRelation.data.hours }}
+									</td>
+									<td class="vertical-middle text-right">
+										{{ userCompanyRelation.data.role.name }}
+									</td>
+									<td class="vertical-middle text-right temporaly-hidden">
+										{{ userCompanyRelation.data.status.name }}
+									</td>
+
+									<td class="vertical-middle text-right user-action">
+										<a title="Detail uživatele" class="btn btn-sm btn-default" href="{{ path("app_company_companyusercompanydetail", {"company_id" : company.id, "userCompany_id" : userCompanyRelation.id}) }}">
+											<i class="fa fa-fw fa-search"></i>
+										</a>
+
+										<a title="Upravit uživatele" class="btn btn-sm btn-default" href="{{ path("app_company_companyusercompanyupdate", {"company_id" : company.id, "userCompany_id" : userCompanyRelation.id}) }}">
+											<i class="fa fa-fw fa-cog"></i>
+										</a>
+									</td>
+
+								</tr>
+							{% endfor %}
+
+
+							{% if company.invitations|length > 0 %}
+								{% for invitation in company.invitations if invitation.enabled %}
+									<tr class="invited-user">
+										<td class="text-center vertical-middle">
+											<span class="no-image"></span>
+											<!-- <i class="fa fa-question-circle"></i> -->
+										</td>
+										<td class="vertical-middle">
+											{{ invitation.email }}
+										</td>
+										<td class="text-right vertical-middle">
+											{{ invitation.rateInternal }} Kč
+										</td>
+										<td class="text-right vertical-middle">
+											{{ invitation.hours }} h
+										</td>
+										<td class="text-right vertical-middle">
+											{{ invitation.role.name }}
+										</td>
+										<td class="text-right vertical-middle">
+											odeslaná pozvánka
+										</td>
+										<td>
+
+										</td>
+									</tr>
+								{% endfor %}
+							{% endif %}
+
+
+						</tbody>
+					</table>
+				</div> <!-- .table-responsive -->
+
+
+
+			</div> <!-- .panel panel-default -->
+
+
+
+
+			<div class="row">
+				<div class="col-lg-6">
+
+
+					<button class="btn btn-sm btn-default temporaly-hidden"><i class="fa fa-fw fa-floppy-o"></i> Exportovat</button>
+
+					{#{% if company.enabled %}#}
+						{#<a class="btn btn-sm btn-default" href="{{ path('app_company_changestatus', {"company_id" : company.id, "status" : 0}) }}"><i class="fa fa-fw fa-lg fa-toggle-on"></i> Deaktivovat společnost</a>#}
+					{#{% else %}#}
+						{#<a class="btn btn-sm btn-default" href="{{ path('app_company_changestatus', {"company_id" : company.id, "status" : 1}) }}"><i class="fa fa-fw fa-lg fa-toggle-off"></i> Aktivovat společnosti</a>#}
+					{#{% endif %}#}
+
+					{#<a tabindex="0" class="small text-info activate-info-icon" role="button" data-toggle="popover" data-trigger="focus" title="Aktivace/deaktivace společnosti" data-content="A zde se nachází nějaké úžasné vysvětlení, které předčí všechna ostatní."><i class="fa fa-fw fa-info-circle"></i></a>#}
+
+
+				</div> <!-- .col-lg-6 -->
+
+				<div class="col-lg-6 text-right small">
+					Celkem uživatelů: <span class="badge">{{ company.userCompanyRelations|length }}</span>
+				</div> <!-- .col-lg-6 -->
+			</div> <!-- .row -->
+
+		</div> <!-- .col-lg-12 -->
+	</div> <!-- .row -->
+
+
+
+
+
+	<!-- ========== Groups ========== -->
+	{% if company.companyGroups|length > 0 %}
+
+		<div class="page-header company-group-page-header">
+			<div class="row">
+				<div class="col-lg-12">
+					<h3><i class="fa fa-fw fa-users"></i> Skupiny</h3>
+				</div> <!-- .col-lg-12 -->
+			</div> <!-- .row -->
+		</div> <!-- .page-header -->
+
+	{% endif %}
+
+
+	<div class="row">
+
+		{% for companygroup in company.companyGroups %}
+
+			<div class="col-lg-4">
+				<div class="panel panel-default company-group-panel {% if companygroup.enabled %}{% else %}company-group-panel-disabled{% endif %}">
+					<div class="panel-body">
+
+						<h4 class="company-group-header">
+							<a href="{{ path('app_companygroup_update', {'company_id': company.id, 'companygroup_id': companygroup.id}) }}">
+								{{ companygroup.name }}
+							</a>
+						</h4> <!-- .company-header -->
+
+						<div class="company-group-users">
+							{% for cgucr in companygroup.companyGroupUserCompanyRelationsOfEnabledTemporality %}
+								{% set member = cgucr.userCompany.user %}
+								<img class="user-image" src="{{ asset(member.image.webPath) }}" alt="{{ member.fullName }}">
+							{% endfor %}
+						</div> <!-- .company-users -->
+
+						<a class="company-group-edit text-info" href="{{ path('app_companygroup_update', {'company_id': company.id, 'companygroup_id': companygroup.id}) }}">
+							<i class="fa fa-fw fa-gear"></i>
+						</a>
+
+						<div class="company-group-status">
+							{% if companygroup.enabled %}
+								<a class="" href="{{ path('app_companygroup_changestatus', {"company_id" : company.id, 'companygroup_id': companygroup.id, "status" : 0}) }}">
+									<i class="fa fa-fw fa-lg fa-toggle-on"></i>
+								</a>
+							{% else %}
+								<a class="" href="{{ path('app_companygroup_changestatus', {"company_id" : company.id, 'companygroup_id': companygroup.id, "status" : 1}) }}">
+									<i class="fa fa-fw fa-lg fa-toggle-off"></i>
+								</a>
+							{% endif %}
+						</div> <!-- .company-group-status -->
+
+
+					</div> <!-- .panel-body -->
+				</div> <!-- .panel .panel-default -->
+			</div> <!-- .col-lg-4 -->
+
+		{% endfor %}
+
+	</div> <!-- .row -->
+
+
+{% endblock %}

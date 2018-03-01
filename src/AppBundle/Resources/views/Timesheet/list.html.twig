@@ -1,0 +1,395 @@
+{% extends "::layout-secured.html.twig" %}
+{% set title = "Timesheet" %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-timesheet-list {{ parent() }}{% endblock %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+
+
+	<!-- ========== Page Header ========== -->
+	<div class="page-header">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1>Ahoj {{ vokative }}!</h1>
+            </div> <!-- .col-lg-6 -->
+        </div> <!-- .row -->
+    </div> <!-- .page-header -->
+
+	<div class="row">
+		<div class="col-lg-12 text-right">
+            {{ render(controller('AppBundle:TimeWindow:index')) }}
+		</div>
+	</div>
+
+	<!-- ========== Timesheet Watch ========== -->
+	{{ form_start(form, {'attr' : {'id' : 'timesheetForm'}}) }}
+		<div class="timesheet-watch">
+			<div class="well">
+				<div class="row">
+
+					<div class="col col-lg-2">
+						{{ form_widget(form.date, {'attr' : {'placeholder' : 'datum', 'value' : now|date('j. n. Y')}}) }}
+					</div> <!-- .col-lg-3 -->
+
+					<div class="col col-lg-2">
+						{{ form_widget(form.commission) }}
+					</div> <!-- .col-lg-2 -->
+
+					<div class="col col-lg-2">
+						{{ form_widget(form.activity) }}
+					</div> <!-- .col-lg-2 -->
+
+					<div class="col col-lg-3{% if form.children['description'].vars.errors|length > 0 %} has-error{% endif %}">
+						{{ form_widget(form.description, {'attr' : {'placeholder' : 'Popis'}}) }}
+						{{ form_errors(form.description) }}
+					</div> <!-- .col-lg-2 -->
+
+					<div class="col col-lg-2{% if form.children['duration'].vars.errors|length > 0 %} has-error{% endif %}">
+						<div class="input-group">
+							{{ form_widget(form.duration) }}
+							<div class="input-group-addon">min.</div>
+						</div>
+						{{ form_errors(form.duration) }}
+					</div> <!-- .col-lg-1 -->
+
+					<div class="col col-lg-1">
+						<button type="submit" class="btn btn-primary btn-block">Uložit</button>
+					</div> <!-- .col-lg-3 -->
+				</div> <!-- .row -->
+				<div class="row timesheet-update-info" style="display: none;">
+					<div class="col col-lg-12 text-right">
+						<p>
+							POZOR! Upravujete existující záznam.
+							<input type="button" class="btn btn-xs btn-danger btn-timesheet-update-reset btn-inline" value="Zrušit">
+						</p>
+					</div>
+				</div>
+			</div> <!-- .well -->
+		</div> <!-- .timesheet-watch -->
+		<input type="hidden" name="update" value="">
+	{{ form_end(form) }}
+
+	<div class="row">
+		<div class="col-md-9">
+            {% if timesheetsGraph|length > 0 %}
+				<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+				<div class="panel panel-default">
+					<div class="panel-heading">Graf</div>
+					<div class="panel-body">
+						<div id="chart_div"></div>
+					</div>
+				</div>
+            {% endif %}
+		</div>
+		<div class="col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">Aktuální přehled</div>
+				<div class="panel-body">
+					<h5>Denní průměr aktuálního týdne</h5>
+					<div class="row">
+						<div class="col-xs-4" style="color: #3366cc; font-weight: bold;"><small>zúčt.</small><br> {{ stats['week'][0] }} h</div>
+						<div class="col-xs-4" style="color: #dc3912; font-weight: bold"><small>nezúčt.</small><br>{{ stats['week'][1] }} h</div>
+						<div class="col-xs-4" style="font-weight: bold"><small>celkem</small><br>{{ stats['week'][0]+stats['week'][1] }} h</div>
+					</div>
+					<h5>Denní průměr aktuálního měsíce</h5>
+					<div class="row">
+						<div class="col-xs-4" style="color: #3366cc; font-weight: bold;"><small>zúčt.</small><br>{{ stats['month'][0] }} h</div>
+						<div class="col-xs-4" style="color: #dc3912; font-weight: bold;"><small>nezúčt.</small><br>{{ stats['month'][1] }} h</div>
+						<div class="col-xs-4" style="font-weight: bold"><small>celkem</small><br>{{ stats['month'][0]+stats['month'][1] }} h</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12">
+
+			<div class="panel panel-default timesheet-panel">
+				<div class="panel-heading">Timesheety</div>
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table table-hover table-striped timesheet-table" style="font-size: 13px;">
+							<thead>
+							<tr>
+								<th class="no-orderable"></th>
+								<th class="filterable timesheet-date-col">
+									Datum
+								</th>
+								<th class="filterable">
+									Zakázka
+								</th>
+								<th class="filterable">
+									Aktivita
+								</th>
+								<th>
+									Popis
+								</th>
+								<th class="text-center">
+									Strávený čas <sup>min</sup>
+								</th>
+								<th class="timesheet-action-col no-orderable">
+									<!-- Akce -->
+								</th>
+							</tr>
+							</thead>
+
+							<tbody>
+
+                            {% for timesheet in timesheets %}
+
+								<tr class="timesheet-item-row" data-id="{{ timesheet.id }}">
+									<td></td>
+									<td data-name="date" data-raw="{{ timesheet.date|date('j. n. Y') }}">
+                                        {{ timesheet.date|date('j. n. Y') }}
+									</td>
+									<td data-name="commission" data-raw="{{ timesheet.commission.id }}">
+                                        {{ timesheet.commission.name }}
+									</td>
+                                    {% if timesheet.activity is defined and timesheet.activity %}
+										<td data-name="activity" data-raw="{{ timesheet.activity.id }}">
+                                            {{ timesheet.activity.name }}
+										</td>
+                                    {% else %}
+										<td data-name="activity" data-raw="0"></td>
+                                    {% endif %}
+									<td data-name="description" data-raw="{{ timesheet.description }}">
+                                        {{ timesheet.description }}
+									</td>
+									<td class="text-center" data-name="duration" data-raw="{{ timesheet.duration }}">
+                                        {{ timesheet.duration }}
+									</td>
+									<td class="timesheet-item-action text-right" style="white-space: nowrap;">
+
+										<a title="Upravit" class="btn btn-sm btn-default btn-timesheet-update" href="#" data-type="update">
+											<i class="fa fa-fw fa-edit"></i>
+										</a>
+
+										<a title="Vytvořit záznam ze šablony" class="btn btn-sm btn-default btn-timesheet-duplicate" href="#" data-type="duplicate">
+											<i class="fa fa-fw fa-clone"></i>
+										</a>
+
+										<a title="Odstranit záznam" class="btn btn-sm btn-default" href="{{ path('app_timesheet_delete', {'timesheet_id': timesheet.id}) }}">
+											<i class="fa fa-fw fa-trash"></i>
+										</a>
+									</td>
+								</tr>
+
+                            {% endfor %}
+
+							</tbody>
+
+						</table>
+					</div> <!-- .table-responsive -->
+				</div>
+			</div> <!-- .panel panel-default -->
+
+		</div>
+	</div>
+
+{% endblock %}
+
+
+
+
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+	{% if timesheetsGraph|length > 0 %}
+		<script type="text/javascript">
+			google.charts.load('current', {packages: ['corechart', 'bar']});
+			google.charts.setOnLoadCallback(drawStacked);
+
+			function drawStacked() {
+				var data = google.visualization.arrayToDataTable([
+					['', 'Zúčtovatelné', 'Nezúčtovatelné'],
+					{% for key, value in timesheetsGraph %}
+						['{{ key }}', {{ value[0] }}, {{ value[1] }}],
+					{% endfor %}
+				]);
+
+				var options = {
+                    isStacked: true,
+					legend: {
+						position: 'bottom'
+					}
+				};
+
+				var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+				chart.draw(data, options);
+			}
+		</script>
+	{% endif %}
+
+	{#<script type="text/javascript">#}
+		{#google.charts.load('current', {'packages':['bar']});#}
+		{#google.charts.setOnLoadCallback(drawChart);#}
+		{#function drawChart() {#}
+			{#var data = google.visualization.arrayToDataTable([#}
+				{#['Year', 'Sales', 'Expenses', 'Profit'],#}
+				{#['2014', 1000, 400, 200],#}
+				{#['2015', 1170, 460, 250],#}
+				{#['2016', 660, 1120, 300],#}
+				{#['2017', 1030, 540, 350]#}
+			{#]);#}
+
+			{#var options = {#}
+				{#isStacked: true,#}
+				{#chart: {#}
+					{#title: 'Company Performance',#}
+					{#subtitle: 'Sales, Expenses, and Profit: 2014-2017',#}
+				{#}#}
+			{#};#}
+
+			{#var chart = new google.charts.Bar(document.getElementById('chart_div'));#}
+
+			{#chart.draw(data, options);#}
+		{#}#}
+	{#</script>#}
+
+	<script type="text/javascript">
+
+		var $commission = $('#appbundle_timesheet_commission');
+
+		function dynamicChangeTimesheetForm(){
+
+			$("#appbundle_timesheet_activity").attr("disabled", "disabled");
+
+			// ... retrieve the corresponding form.
+			var $form = $('#timesheetForm');
+			// Simulate form data, but only include the selected commission value.
+
+			var data = {};
+			data[$commission.attr('name')] = $commission.val();
+
+			// Submit data via AJAX to the form's action path.
+			$.ajax({
+				url : $form.attr('action'),
+				type: $form.attr('method'),
+				data : data,
+				success: function(html) {
+
+					// Replace current activity field ...
+					$('#appbundle_timesheet_activity').replaceWith(
+							// ... with the returned one from the AJAX response.
+							$(html).find('#appbundle_timesheet_activity')
+					);
+					// Position field now displays the appropriate activity.
+
+				}
+			});
+
+		}
+
+		$('.btn-timesheet-duplicate, .btn-timesheet-update').click(function(e){
+
+			var type = $(this).attr('data-type');
+
+			e.preventDefault();
+			var $form = $('#timesheetForm');
+			var $timesheetRow = $(this).closest('tr');
+
+			var els = ['commission', 'activity', 'description', 'duration'];
+
+			if(type === 'update'){
+				els.push('date');
+				$form.find('.timesheet-update-info').show();
+				$form.find('[name="update"]').val($timesheetRow.attr('data-id'));
+			}else{
+				hideTimesheetInfo();
+			}
+
+			for(var i = 0; i < els.length; i++){
+
+				var el = els[i];
+
+				$form.find('[name="appbundle_timesheet['+el+']"]').val($timesheetRow.find('[data-name="'+el+'"]').attr('data-raw'));
+
+			}
+
+			//Try load select
+			$("#appbundle_timesheet_activity").attr("disabled", "disabled");
+
+			// Simulate form data, but only include the selected commission value.
+
+			var data = {};
+			data[$commission.attr('name')] = $commission.val();
+
+			$form.find('input').attr('disabled', 'disabled');
+
+			// Submit data via AJAX to the form's action path.
+			$.ajax({
+				url : $form.attr('action'),
+				type: $form.attr('method'),
+				data : data,
+				success: function(html) {
+
+					// Replace current activity field ...
+					$('#appbundle_timesheet_activity').replaceWith(
+							// ... with the returned one from the AJAX response.
+							$(html).find('#appbundle_timesheet_activity')
+					);
+					// Position field now displays the appropriate activity.
+
+					for(var i = 0; i < els.length; i++){
+
+						var el = els[i];
+
+						$form.find('[name="appbundle_timesheet['+el+']"]').val($timesheetRow.find('[data-name="'+el+'"]').attr('data-raw'));
+
+					}
+
+					$form.find('input').removeAttr('disabled');
+
+				}
+			});
+
+			// Při duplikace zvýrazni formulář
+			$('html, body').animate({scrollTop: 0}, 500, function(e) {
+				$(".timesheet-watch input, .timesheet-watch select, .timesheet-watch .well").addClass("flash").delay(1500).queue(function(){
+					$(this).removeClass("flash").dequeue();
+				});
+			});
+
+		});
+
+		$('.btn-timesheet-update-reset').click(function(e){
+			hideTimesheetInfo();
+		});
+
+		function hideTimesheetInfo(){
+			var $form = $('#timesheetForm');
+
+			$form.find('.timesheet-update-info').hide();
+			$form.find('[name="update"]').val("");
+		}
+
+
+		$(document).ready(function() {
+
+			// When commission gets selected ...
+			$commission.change(function() {
+				dynamicChangeTimesheetForm();
+			});
+
+			// Or when form is loaded
+			dynamicChangeTimesheetForm();
+
+			$('#appbundle_timesheet_date').datepicker({
+				format: "d. m. yyyy",
+				weekStart: 1,
+				maxViewMode: 0,
+				language: "cs",
+				autoclose: true,
+				todayHighlight: true
+			});
+
+		});
+
+	</script>
+
+{% endblock %}

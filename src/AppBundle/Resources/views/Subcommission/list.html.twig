@@ -1,0 +1,240 @@
+{% extends '::layout-secured.html.twig' %}
+{% set title = commission.name ~ " - subzakázky " %}
+{% block title %}{{ title }} {{ titleSeparator }} {{ parent() }}{% endblock %}
+{% block body_class %}page-commission-detail page-subcommission-list{{ parent() }}{% endblock %}
+
+
+{% block content %}
+
+
+    <!-- ========== Page header ========== -->
+    {% include '@App/Commission/inc/commissionHeader.html.twig' with {'commission' : commission, 'label' : 'subzakázky'} %}
+
+
+
+
+
+	<!-- ========== Commission nav ========== -->
+	{% include "@App/Commission/inc/commissionNav.html.twig" %}
+
+
+
+
+
+
+    {% if commission.subcommissions|length == 0 %}
+
+        <div class="row">
+            <div class="col-lg-12 text-right">
+                <a class="btn btn-sub-header btn-warning" title="Vytvořit subzakázku" href="{{ path('app_subcommission_create', {'commission_id': commission.id}) }}">
+                    <i class="fa fa-fw fa-plus"></i> Nová subzakázka
+                </a>
+            </div> <!-- .col-lg-4 -->
+        </div>
+
+    {% else %}
+
+
+    <!-- ========== Subcommissions table ========== -->
+    <div class="row data-graph-parent">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="data-graph"></div>
+                </div> <!-- .panel-body -->
+            </div> <!-- .panel panel-default -->
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="panel panel-default">
+
+                <div class="table-buttons text-right">
+                    <button class="btn btn-sm btn-default btn-data-graph"><i class="fa fa-line-chart"></i></button>
+                    <a class="btn btn-sm btn-default" target="_blank" href='{{ path('table_table_editcode', {'table_code': 'table-subcommissions'}) }}'><i class="fa fa-gears"></i></a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover subcommission-table table-calx table-highchart" data-graph-container=".data-graph" data-graph-type="line">
+                        <thead>
+                        <tr>
+                            <th>
+                                Subzakázka
+                            </th>
+
+                            {% for column in table.tableDefaultColumns %}
+
+                                {% if userDefaultColumns[column.id] is not defined or not userDefaultColumns[column.id].hidden %}
+                                    <th class="text-right" data-cell="{{ column.code }}1" data-visibility="1">
+                                        {{ column.title|replace({'(plán)' : '<sup>plán</sup>'})|replace({'(reál)' : '<sup>reál</sup>'})|raw }}
+                                    </th>
+                                {% else %}
+                                    <th class="text-right" data-cell="{{ column.code }}1" data-visibility="0" data-graph-skip="1">
+                                        {{ column.title|replace({'(plán)' : '<sup>plán</sup>'})|replace({'(reál)' : '<sup>reál</sup>'})|raw }}
+                                    </th>
+                                {% endif %}
+
+                            {% endfor %}
+
+                            {% for column in userColumns %}
+
+                                <th class="text-right">
+                                    {{ column.title }}
+                                </th>
+
+                            {% endfor %}
+
+                            <th data-graph-skip="1">
+                                <!-- Akce -->
+                            </th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for subcommission in subcommissions %}
+
+                            <tr class="subcommission-row">
+                                <td>
+                                    {{ subcommission.code }}
+                                </td>
+                                <td class="text-right" data-cell="A{{ loop.index }}">
+                                    {{ subcommission.data.feeFixPlan }}
+                                </td>
+                                <td class="text-right" data-cell="B{{ loop.index }}">
+                                    {{ subcommission.data.feeFixReal }}
+                                </td>
+                                <td class="text-right" data-cell="C{{ loop.index }}">
+                                    {{ subcommission.data.feeSuccessPlan }}
+                                </td>
+                                <td class="text-right" data-cell="D{{ loop.index }}">
+                                    {{ subcommission.data.feeSuccessReal }}
+                                </td>
+                                <td class="text-right" data-cell="E{{ loop.index }}">
+                                    {{ subcommission.data.hoursPlan }}
+                                </td>
+                                <td class="text-right" data-cell="F{{ loop.index }}">
+                                    {{ subcommission.data.hoursReal }}
+                                </td>
+                                <td class="text-right" data-cell="G{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.rateExternal }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="H{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.rateInternal }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="I{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.totalRateExternalPlan }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="J{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.totalRateExternalReal }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="K{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.totalRateInternalPlan }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="L{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.totalRateInternalReal }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="M{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.hoursPlan }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="N{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.data.hoursReal }}
+                                    {% endif %}
+                                </td>
+                                <td class="text-right" data-cell="O{{ loop.index }}">
+                                    {% if subcommission.teamData %}
+                                        {{ subcommission.teamData.members|length }}
+                                    {% endif %}
+                                </td>
+
+                                {% set index = loop.index %}
+
+                                {% for column in userColumns %}
+
+                                    <td class="text-right" data-formula="{{ column.formula|replaceCalcx(index) }}"></td>
+
+                                {% endfor %}
+
+                                {#<td class="text-right" data-cell="L{{ loop.index }}" data-formula="B{{ loop.index }}+D{{ loop.index }}"></td>#}
+                                <td class="subcommission-item-action">
+                                    <a title="Duplikovat" class="btn btn-default btn-sm edit-subcommission text-info" href="{{ path('app_subcommission_duplicate', {'commission_id': commission.id, 'subcommission_id' : subcommission.id}) }}"><i class="fa fa-fw fa-clone"></i></a>
+                                    <a title="Upravit" class="btn btn-default btn-sm edit-subcommission text-info" href="{{ path('app_subcommission_update', {'commission_id': commission.id, 'subcommission_id' : subcommission.id}) }}"><i class="fa fa-fw fa-pencil"></i></a>
+                                    <a title="Tým" class="btn btn-default btn-sm edit-subcommission text-info" href="{{ path('app_subcommission_teamupdate', {'commission_id': commission.id, 'subcommission_id' : subcommission.id}) }}"><i class="fa fa-fw fa-users"></i></a>
+                                    <a title="Odstranit" class="btn btn-default btn-sm edit-subcommission text-info" href="{{ path('app_subcommission_delete', {'commission_id': commission.id, 'subcommission_id' : subcommission.id}) }}"><i class="fa fa-fw fa-trash"></i></a>
+                                </td> <!-- .subcommission-action -->
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div> <!-- .table-responsive -->
+
+            </div> <!-- .panel panel-default -->
+
+            {% if commission.subcommissions|length >= 2 %}
+
+                {% if canCleverDuplicate %}
+
+                    <div class="row">
+                        <div class="col-lg-6">
+
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Chytře zduplikovat
+                                    <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+
+                                    {% set max = commission.subcommissions|length <= 12 ? commission.subcommissions|length : 12 %}
+
+                                    {% for i in 2..max %}
+                                        {% set c = i <= 4 ? 'poslední subzakázky' : 'posledních subzakázek' %}
+                                        <li><a class='dropdown-item' href="{{ path('app_subcommission_duplicateclever', {'commission_id' : commission.id, 'd' : i}) }}">{{ i }} {{ c }}</a></li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <p>Pro chytrou duplikaci je nutné si zobrazit poslední subzakázku ({{ lastSubcommission.code }}).</p>
+
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endif %}
+
+        </div> <!-- .col-lg-12 -->
+    </div> <!-- .row -->
+
+    {% endif %}
+
+
+{% endblock %}

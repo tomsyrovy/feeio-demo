@@ -1,0 +1,534 @@
+<script type="text/javascript">
+
+    var jobPositionsExt = [];
+    {% for source in commission.campaign.sourceList.sources %}
+        jobPositionsExt[{{ source.id }}] = {{ source.rateExternal }};
+    {% endfor %}
+    var jobPositionsInt = [];
+    {% for jobPosition in commission.jobPositions %}
+        jobPositionsInt[{{ jobPosition.id }}] = {{ jobPosition.internalRate }};
+    {% endfor %}
+    var userCompaniesInt = [];
+    {% for userCompany in commission.userCompanies %}
+        userCompaniesInt[{{ userCompany.id }}] = {{ userCompany.data.rateInternal }};
+    {% endfor %}
+
+    var $form = $('#form');
+    var $selector = $("#allocationContainerLists");
+
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function setRatesExternal($select){
+
+        var $tr = $select.closest('tr');
+        var val = $tr.find('td.cell-generalSource select').val();
+
+        var iSellingPricePlan = $tr.find('td.cell-sellingPricePlan input');
+        var iSellingPriceReal = $tr.find('td.cell-sellingPriceReal input');
+
+        if(val){
+            iSellingPricePlan.val(jobPositionsExt[val]);
+            iSellingPriceReal.val(jobPositionsExt[val]);
+        }else{
+            iSellingPricePlan.val('');
+            iSellingPriceReal.val('');
+        }
+    }
+    function setRatesInternal($select){
+        var $tr = $select.closest('tr');
+
+        var iBuyingPricePlan = $tr.find('td.cell-buyingPricePlan input');
+        var iBuyingPriceReal = $tr.find('td.cell-buyingPriceReal input');
+
+        var val = $tr.find('td.cell-generalSource select').val();
+        if(val){
+            iBuyingPricePlan.val(jobPositionsInt[val]);
+            iBuyingPriceReal.val(jobPositionsInt[val]);
+        }else{
+            iBuyingPricePlan.val('');
+            iBuyingPriceReal.val('');
+        }
+        var val = $tr.find('td.cell-concreteSource select').val();
+        if(val){
+            iBuyingPricePlan.val(userCompaniesInt[val]);
+            iBuyingPriceReal.val(userCompaniesInt[val]);
+        }else{
+            iBuyingPricePlan.val('');
+            iBuyingPriceReal.val('');
+        }
+    }
+
+    function switchExtSource($select){
+        var val = $select.val();
+        var $tr = $select.closest('tr');
+
+        $tr.find('td.cell-generalSource').hide();
+        $tr.find('td.cell-concreteSource').hide();
+        $tr.find('td.cell-generalSourceExt').hide();
+        $tr.find('td.cell-concreteSourceExt').hide();
+        $tr.find('td.cell-unit input').removeAttr('readonly');
+        $tr.find('td.cell-quantityReal input').removeAttr('readonly');
+//        $tr.find('td.cell-buyingPriceReal input').removeAttr('readonly');
+//        $tr.find('td.cell-sellingPriceReal input').removeAttr('readonly');
+//        $tr.find('td.cell-marginReal input').removeAttr('readonly');
+
+        if(val == 1){ //external-source
+            $tr.find('td.cell-generalSourceExt').show();
+            $tr.find('td.cell-concreteSourceExt').show();
+        }else{ //job-consultant
+            $tr.find('td.cell-generalSource').show();
+            $tr.find('td.cell-concreteSource').show();
+            $tr.find('td.cell-unit input').attr('readonly', 'readonly').val('h');
+            $tr.find('td.cell-quantityReal input').attr('readonly', 'readonly');
+//            $tr.find('td.cell-buyingPriceReal input').attr('readonly', 'readonly');
+//            $tr.find('td.cell-sellingPriceReal input').attr('readonly', 'readonly');
+//            $tr.find('td.cell-marginReal input').attr('readonly', 'readonly');
+            var $iQuantityPlan = $tr.find('td.cell-quantityPlan input');
+            if(!isNumeric($iQuantityPlan.val())){
+                $iQuantityPlan.val(1);
+            }
+        }
+
+    }
+
+    function calculateRowSum($tr){
+        var $iQuantityPlan = $tr.find('td.cell-quantityPlan input');
+        var $iBuyingPricePlan = $tr.find('td.cell-buyingPricePlan input');
+        var $iSellingPricePlan = $tr.find('td.cell-sellingPricePlan input');
+
+        var $iSumBuyingPricePlan = $tr.find('td.cell-sumBuyingPricePlan input');
+        var $iSumSellingPricePlan = $tr.find('td.cell-sumSellingPricePlan input');
+        var $iSumProfitPlan = $tr.find('td.cell-sumProfitPlan input');
+
+        if(isNumeric($iQuantityPlan.val()) && isNumeric($iBuyingPricePlan.val())){
+            $iSumBuyingPricePlan.val($iQuantityPlan.val()*$iBuyingPricePlan.val());
+        }else{
+            $iSumBuyingPricePlan.val('');
+        }
+
+        if(isNumeric($iQuantityPlan.val()) && isNumeric($iSellingPricePlan.val())){
+            $iSumSellingPricePlan.val($iQuantityPlan.val()*$iSellingPricePlan.val());
+        }else{
+            $iSumSellingPricePlan.val('');
+        }
+
+        if(isNumeric($iSumSellingPricePlan.val()) && isNumeric($iSumBuyingPricePlan.val())){
+            $iSumProfitPlan.val($iSumSellingPricePlan.val()-$iSumBuyingPricePlan.val());
+        }else{
+            $iSumProfitPlan.val('');
+        }
+
+        var $iQuantityReal = $tr.find('td.cell-quantityReal input');
+        var $iBuyingPriceReal = $tr.find('td.cell-buyingPriceReal input');
+        var $iSellingPriceReal = $tr.find('td.cell-sellingPriceReal input');
+
+        var $iSumBuyingPriceReal = $tr.find('td.cell-sumBuyingPriceReal input');
+        var $iSumSellingPriceReal = $tr.find('td.cell-sumSellingPriceReal input');
+        var $iSumProfitReal = $tr.find('td.cell-sumProfitReal input');
+
+        if(isNumeric($iQuantityReal.val()) && isNumeric($iBuyingPriceReal.val())){
+            $iSumBuyingPriceReal.val($iQuantityReal.val()*$iBuyingPriceReal.val());
+        }else{
+            $iSumBuyingPriceReal.val('');
+        }
+
+        if(isNumeric($iQuantityReal.val()) && isNumeric($iSellingPriceReal.val())){
+            $iSumSellingPriceReal.val($iQuantityReal.val()*$iSellingPriceReal.val());
+        }else{
+            $iSumSellingPriceReal.val('');
+        }
+
+        if(isNumeric($iSumSellingPriceReal.val()) && isNumeric($iSumBuyingPriceReal.val())){
+            $iSumProfitReal.val($iSumSellingPriceReal.val()-$iSumBuyingPriceReal.val());
+        }else{
+            $iSumProfitReal.val('');
+        }
+
+    }
+
+    function calculateSellingPrice($tr){
+
+        var $iBuyingPricePlan = $tr.find('td.cell-buyingPricePlan input');
+        var $iMarginPlan = $tr.find('td.cell-marginPlan input');
+        var $iSellingPricePlan = $tr.find('td.cell-sellingPricePlan input');
+
+        if(isNumeric($iMarginPlan.val()) && isNumeric($iBuyingPricePlan.val())){
+            $iSellingPricePlan.val(Math.round($iBuyingPricePlan.val()*(100+$iMarginPlan.val()*1)/100));
+        }else{
+            $iSellingPricePlan.val('');
+        }
+
+        var $iBuyingPriceReal = $tr.find('td.cell-buyingPriceReal input');
+        var $iMarginReal = $tr.find('td.cell-marginReal input');
+        var $iSellingPriceReal = $tr.find('td.cell-sellingPriceReal input');
+
+        if(isNumeric($iMarginReal.val()) && isNumeric($iBuyingPriceReal.val())){
+            $iSellingPriceReal.val(Math.round($iBuyingPriceReal.val()*(100+$iMarginReal.val()*1)/100));
+        }else{
+            $iSellingPriceReal.val('');
+        }
+
+    }
+
+    function calculateMargin($tr){
+
+        var $iBuyingPricePlan = $tr.find('td.cell-buyingPricePlan input');
+        var $iMarginPlan = $tr.find('td.cell-marginPlan input');
+        var $iSellingPricePlan = $tr.find('td.cell-sellingPricePlan input');
+
+        if(isNumeric($iSellingPricePlan.val()) && isNumeric($iBuyingPricePlan.val())){
+            var margin = ($iSellingPricePlan.val()-$iBuyingPricePlan.val())/$iBuyingPricePlan.val()*100;
+            if(isNumeric(margin)){
+                $iMarginPlan.val(Math.round(margin*10)/10);
+            }else{
+                $iMarginPlan.val('');
+            }
+        }else{
+            $iMarginPlan.val('');
+        }
+
+        var $iBuyingPriceReal = $tr.find('td.cell-buyingPriceReal input');
+        var $iMarginReal = $tr.find('td.cell-marginReal input');
+        var $iSellingPriceReal = $tr.find('td.cell-sellingPriceReal input');
+
+        if(isNumeric($iSellingPriceReal.val()) && isNumeric($iBuyingPriceReal.val())){
+            var margin = ($iSellingPriceReal.val()-$iBuyingPriceReal.val())/$iBuyingPriceReal.val()*100;
+            if(isNumeric(margin)){
+                $iMarginReal.val(Math.round(margin*10)/10);
+            }else{
+                $iMarginReal.val('');
+            }
+        }else{
+            $iMarginReal.val('');
+        }
+
+    }
+
+    function calculateColSum($tBody){
+
+        var $tBodySubTotal = $form.find('[data-total="'+$tBody.attr('id')+'"]');
+
+        var $iSTSumBuyingPricePlan = $tBodySubTotal.find('td.cell-sumBuyingPricePlan input');
+        var $iSTSumSellingPricePlan = $tBodySubTotal.find('td.cell-sumSellingPricePlan input');
+        var $iSTSumProfitPlan = $tBodySubTotal.find('td.cell-sumProfitPlan input');
+
+        var iSTSumBuyingPricePlan = 0;
+        var iSTSumSellingPricePlan = 0;
+        var iSTSumProfitPlan = 0;
+
+        var $iSTSumBuyingPriceReal = $tBodySubTotal.find('td.cell-sumBuyingPriceReal input');
+        var $iSTSumSellingPriceReal = $tBodySubTotal.find('td.cell-sumSellingPriceReal input');
+        var $iSTSumProfitReal = $tBodySubTotal.find('td.cell-sumProfitReal input');
+
+        var iSTSumBuyingPriceReal = 0;
+        var iSTSumSellingPriceReal = 0;
+        var iSTSumProfitReal = 0;
+
+        $tBody.find('tr.row-item').each(function(){
+
+            var $tr = $(this);
+            
+            var $iSumBuyingPricePlan = $tr.find('td.cell-sumBuyingPricePlan input');
+            var $iSumSellingPricePlan = $tr.find('td.cell-sumSellingPricePlan input');
+            var $iSumProfitPlan = $tr.find('td.cell-sumProfitPlan input');
+
+            if(isNumeric($iSumBuyingPricePlan.val())){
+                iSTSumBuyingPricePlan = iSTSumBuyingPricePlan+$iSumBuyingPricePlan.val()*1;
+            }
+
+            if(isNumeric($iSumSellingPricePlan.val())){
+                iSTSumSellingPricePlan = iSTSumSellingPricePlan+$iSumSellingPricePlan.val()*1;
+            }
+
+            if(isNumeric($iSumProfitPlan.val())){
+                iSTSumProfitPlan = iSTSumProfitPlan+$iSumProfitPlan.val()*1;
+            }
+
+            var $iSumBuyingPriceReal = $tr.find('td.cell-sumBuyingPriceReal input');
+            var $iSumSellingPriceReal = $tr.find('td.cell-sumSellingPriceReal input');
+            var $iSumProfitReal = $tr.find('td.cell-sumProfitReal input');
+
+            if(isNumeric($iSumBuyingPriceReal.val())){
+                iSTSumBuyingPriceReal = iSTSumBuyingPriceReal+$iSumBuyingPriceReal.val()*1;
+            }
+
+            if(isNumeric($iSumSellingPriceReal.val())){
+                iSTSumSellingPriceReal = iSTSumSellingPriceReal+$iSumSellingPriceReal.val()*1;
+            }
+
+            if(isNumeric($iSumProfitReal.val())){
+                iSTSumProfitReal = iSTSumProfitReal+$iSumProfitReal.val()*1;
+            }
+
+        });
+
+        if(isNumeric(iSTSumBuyingPricePlan)){
+            $iSTSumBuyingPricePlan.val(iSTSumBuyingPricePlan);
+        }else{
+            $iSTSumBuyingPricePlan.val('');
+        }
+
+        if(isNumeric(iSTSumSellingPricePlan)){
+            $iSTSumSellingPricePlan.val(iSTSumSellingPricePlan);
+        }else{
+            $iSTSumSellingPricePlan.val('');
+        }
+
+        if(isNumeric(iSTSumProfitPlan)){
+            $iSTSumProfitPlan.val(iSTSumProfitPlan);
+        }else{
+            $iSTSumProfitPlan.val('');
+        }
+
+        if(isNumeric(iSTSumBuyingPriceReal)){
+            $iSTSumBuyingPriceReal.val(iSTSumBuyingPriceReal);
+        }else{
+            $iSTSumBuyingPriceReal.val('');
+        }
+
+        if(isNumeric(iSTSumSellingPriceReal)){
+            $iSTSumSellingPriceReal.val(iSTSumSellingPriceReal);
+        }else{
+            $iSTSumSellingPriceReal.val('');
+        }
+
+        if(isNumeric(iSTSumProfitReal)){
+            $iSTSumProfitReal.val(iSTSumProfitReal);
+        }else{
+            $iSTSumProfitReal.val('');
+        }
+
+    }
+
+    function calculateColGrandTotal(){
+
+        var $tBodySubTotal = $form.find('tr.grand-total');
+
+        var $iSTSumBuyingPricePlan = $tBodySubTotal.find('td.cell-sumBuyingPricePlan input');
+        var $iSTSumSellingPricePlan = $tBodySubTotal.find('td.cell-sumSellingPricePlan input');
+        var $iSTSumProfitPlan = $tBodySubTotal.find('td.cell-sumProfitPlan input');
+
+        var iSTSumBuyingPricePlan = 0;
+        var iSTSumSellingPricePlan = 0;
+        var iSTSumProfitPlan = 0;
+
+        var $iSTSumBuyingPriceReal = $tBodySubTotal.find('td.cell-sumBuyingPriceReal input');
+        var $iSTSumSellingPriceReal = $tBodySubTotal.find('td.cell-sumSellingPriceReal input');
+        var $iSTSumProfitReal = $tBodySubTotal.find('td.cell-sumProfitReal input');
+
+        var iSTSumBuyingPriceReal = 0;
+        var iSTSumSellingPriceReal = 0;
+        var iSTSumProfitReal = 0;
+
+        $form.find('tr.total').each(function(){
+
+            var $tr = $(this);
+
+            var $iSumBuyingPricePlan = $tr.find('td.cell-sumBuyingPricePlan input');
+            var $iSumSellingPricePlan = $tr.find('td.cell-sumSellingPricePlan input');
+            var $iSumProfitPlan = $tr.find('td.cell-sumProfitPlan input');
+
+            if(isNumeric($iSumBuyingPricePlan.val())){
+                iSTSumBuyingPricePlan = iSTSumBuyingPricePlan+$iSumBuyingPricePlan.val()*1;
+            }
+
+            if(isNumeric($iSumSellingPricePlan.val())){
+                iSTSumSellingPricePlan = iSTSumSellingPricePlan+$iSumSellingPricePlan.val()*1;
+            }
+
+            if(isNumeric($iSumProfitPlan.val())){
+                iSTSumProfitPlan = iSTSumProfitPlan+$iSumProfitPlan.val()*1;
+            }
+
+            var $iSumBuyingPriceReal = $tr.find('td.cell-sumBuyingPriceReal input');
+            var $iSumSellingPriceReal = $tr.find('td.cell-sumSellingPriceReal input');
+            var $iSumProfitReal = $tr.find('td.cell-sumProfitReal input');
+
+            if(isNumeric($iSumBuyingPriceReal.val())){
+                iSTSumBuyingPriceReal = iSTSumBuyingPriceReal+$iSumBuyingPriceReal.val()*1;
+            }
+
+            if(isNumeric($iSumSellingPriceReal.val())){
+                iSTSumSellingPriceReal = iSTSumSellingPriceReal+$iSumSellingPriceReal.val()*1;
+            }
+
+            if(isNumeric($iSumProfitReal.val())){
+                iSTSumProfitReal = iSTSumProfitReal+$iSumProfitReal.val()*1;
+            }
+
+        });
+
+        if(isNumeric(iSTSumBuyingPricePlan)){
+            $iSTSumBuyingPricePlan.val(iSTSumBuyingPricePlan);
+        }else{
+            $iSTSumBuyingPricePlan.val('');
+        }
+
+        if(isNumeric(iSTSumSellingPricePlan)){
+            $iSTSumSellingPricePlan.val(iSTSumSellingPricePlan);
+        }else{
+            $iSTSumSellingPricePlan.val('');
+        }
+
+        if(isNumeric(iSTSumProfitPlan)){
+            $iSTSumProfitPlan.val(iSTSumProfitPlan);
+        }else{
+            $iSTSumProfitPlan.val('');
+        }
+
+        if(isNumeric(iSTSumBuyingPriceReal)){
+            $iSTSumBuyingPriceReal.val(iSTSumBuyingPriceReal);
+        }else{
+            $iSTSumBuyingPriceReal.val('');
+        }
+
+        if(isNumeric(iSTSumSellingPriceReal)){
+            $iSTSumSellingPriceReal.val(iSTSumSellingPriceReal);
+        }else{
+            $iSTSumSellingPriceReal.val('');
+        }
+
+        if(isNumeric(iSTSumProfitReal)){
+            $iSTSumProfitReal.val(iSTSumProfitReal);
+        }else{
+            $iSTSumProfitReal.val('');
+        }
+
+    }
+
+    function addPrototype(that){
+
+        var collectionHolder = $('#' + that.attr('data-target'));
+
+        console.log(that);
+        console.log(collectionHolder);
+
+        var regex = new RegExp(that.attr('data-regex'), "g");
+        var prototype = collectionHolder.attr('data-prototype');
+
+        var form = prototype.replace(regex, collectionHolder.children().length);
+
+        collectionHolder.append(form);
+
+        collectionHolder.find('.btn-add:last').trigger('click');
+        collectionHolder.find('tr:last td.cell-externalSource select').trigger('change');
+
+        return false;
+
+    }
+
+    function removePrototype(that){
+
+        var name = that.attr('data-related');
+
+        $('[data-content="'+name+'"]').remove();
+
+        recalculateTable();
+
+        return false;
+
+    }
+
+    function recalculateTable(){
+
+        $form.find('tr.row-item').each(function(){
+            var $select = $(this).find('td.cell-externalSource select');
+            var $tr = $select.closest('tr');
+            var $tBody = $tr.closest('tbody');
+            var v = $(this).find('td.cell-quantityReal input').val().replace(/,/g, '.');
+            $(this).find('td.cell-quantityReal input').val(v);
+            switchExtSource($select);
+//            setRatesExternal($select);
+//            setRatesInternal($select);
+            calculateMargin($tr);
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+    }
+
+    $(document).ready(function() {
+
+        recalculateTable();
+
+        $form.on("change", 'td.cell-externalSource select', function(){
+            var $tr = $(this).closest('tr');
+            var $tBody = $tr.closest('tbody');
+            switchExtSource($(this));
+            setRatesExternal($(this));
+            setRatesInternal($(this));
+            calculateMargin($tr);
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+        $form.on("change", 'td.cell-generalSource select', function(){
+            var $tr = $(this).closest('tr');
+            var $tBody = $tr.closest('tbody');
+            setRatesExternal($(this));
+            setRatesInternal($(this));
+            calculateMargin($tr);
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+        $form.on("change", 'td.cell-concreteSource select', function(){
+            var $tr = $(this).closest('tr');
+            var $tBody = $tr.closest('tbody');
+            setRatesInternal($(this));
+            calculateMargin($tr);
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+        $form.on("keyup mouseup", 'tr.row-item input', function(){
+            var $tr = $(this).closest('tr');
+            var $tBody = $tr.closest('tbody');
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+        $form.on("keyup mouseup", 'tr.row-item td.cell-marginPlan input, tr.row-item td.cell-marginReal input', function(){
+            var $tr = $(this).closest('tr');
+            var $tBody = $tr.closest('tbody');
+            calculateSellingPrice($tr);
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+        $form.on("keyup mouseup", 'tr.row-item td.cell-sellingPricePlan input, tr.row-item td.cell-sellingPriceReal input', function(){
+            var $tr = $(this).closest('tr');
+            var $tBody = $tr.closest('tbody');
+            calculateMargin($tr);
+            calculateRowSum($tr);
+            calculateColSum($tBody);
+            calculateColGrandTotal();
+        });
+
+        $form.on("click", ".btn-add", function(e) {
+
+            e.preventDefault();
+            addPrototype($(this));
+
+        });
+
+        $form.on("click", ".btn-remove", function(e){
+
+            e.preventDefault();
+            removePrototype($(this));
+
+        });
+
+
+    });
+
+
+</script>
