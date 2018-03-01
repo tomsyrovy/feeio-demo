@@ -1,7 +1,0 @@
-{
-  "name": "highchartTable",
-  "version": "1.1.0",
-  "devDependencies": {
-    "grunt-bump": "0.0.13"
-  }
-}
